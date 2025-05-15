@@ -29,5 +29,9 @@
     "lint-staged": "^16.0.0",
     "prettier": "^3.2.0",
     "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "dotenv-flow": "^4.1.0",
+    "zod": "^3.24.4"
   }
 }

@@ -1,4 +1,7 @@
-// ABOUTME: Core package for shared utilities and types
-// ABOUTME: Exports common functions and interfaces used across the codebase
+/**
+ * ABOUTME: Core package exports
+ * ABOUTME: Exports utilities for use in other packages
+ */
 
-export const packageName = 'Pulss Core';
+export * from './env';
+EOL < /dev/null
