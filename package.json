@@ -1,0 +1,9 @@
+{
+  "name": "pulss",
+  "private": true,
+  "scripts": {
+    "lint": "",
+    "typecheck": "",
+    "test": ""
+  }
+}
