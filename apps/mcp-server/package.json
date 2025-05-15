@@ -1,5 +1,8 @@
 {
   "name": "@pulss/mcp-server",
   "version": "0.1.0",
-  "main": "index.js"
+  "main": "index.js",
+  "scripts": {
+    "tsc": "tsc --noEmit"
+  }
 }
