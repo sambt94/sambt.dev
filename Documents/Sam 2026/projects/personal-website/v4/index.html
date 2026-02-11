@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sam Middleton Beattie</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #0e0e0e;
+            --color-text: #e8e8e8;
+            --color-muted: #bbb;
+            --color-faint: #666;
+            --color-border: #222;
+            --color-pill-bg: rgba(255,255,255,0.08);
+            --color-nav-bg: rgba(14,14,14,0.7);
+            --color-nav-border: rgba(255,255,255,0.06);
+            --font-serif: 'Newsreader', Georgia, serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            --space-xs: 0.5rem;
+            --space-sm: 1rem;
+            --space-md: 2rem;
+            --space-lg: 4rem;
+            --space-xl: 8rem;
+            --max-width: 560px;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Light mode overrides */
+        .light-mode {
+            --color-bg: #f5efe4;
+            --color-text: #1a1a1a;
+            --color-muted: #444;
+            --color-faint: #999;
+            --color-border: #e0d8cb;
+            --color-pill-bg: rgba(0,0,0,0.07);
+            --color-nav-bg: rgba(245,239,228,0.7);
+            --color-nav-border: rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-sans);
+            background: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.6;
+            font-weight: 300;
+            -webkit-font-smoothing: antialiased;
+            transition: background 0.6s var(--ease), color 0.6s var(--ease);
+        }
+
+        /* ═══════════════════════════════════
+           TOP NAV
+        ═══════════════════════════════════ */
+        .top-nav {
+            position: fixed;
+            top: var(--space-md);
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 0.125rem;
+            padding: 0.375rem;
+            background: var(--color-nav-bg);
+            border: 1px solid var(--color-nav-border);
+            border-radius: 100px;
+            font-size: 0.875rem;
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            z-index: 100;
+            opacity: 0;
+            animation: nav-entrance 0.8s var(--ease) 0.4s forwards;
+            transition: background 0.6s var(--ease), border-color 0.6s var(--ease);
+        }
+
+        @keyframes nav-entrance {
+            0% { transform: translateX(-50%) translateY(-20px); opacity: 0; filter: blur(8px); }
+            100% { opacity: 1; filter: blur(0); }
+        }
+
+        .top-nav a {
+            color: var(--color-muted);
+            text-decoration: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 100px;
+            transition: color 0.3s;
+            position: relative;
+            z-index: 2;
+            white-space: nowrap;
+        }
+
+        .top-nav a:hover { color: var(--color-text); }
+        .top-nav a.active { color: var(--color-text); font-weight: 400; }
+
+        .nav-pill {
+            position: absolute;
+            top: 0; left: 0;
+            height: 0; width: 0;
+            background: var(--color-pill-bg);
+            border-radius: 100px;
+            z-index: 1;
+            transition: transform 0.4s var(--ease), width 0.4s var(--ease), height 0.4s var(--ease), opacity 0.2s, background 0.6s var(--ease);
+        }
+
+        /* Theme toggle — top right corner */
+        .theme-egg {
+            position: fixed;
+            top: var(--space-md);
+            right: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--color-muted);
+            z-index: 101;
+            opacity: 0;
+            animation: themeEggEntrance 0.8s var(--ease) 1.2s forwards;
+            transition: color 0.4s var(--ease), opacity 0.4s;
+            cursor: pointer;
+            user-select: none;
+        }
+        .theme-egg:hover { color: var(--color-muted); }
+
+        @keyframes themeEggEntrance {
+            0% { opacity: 0; transform: translateY(-8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .theme-egg-icon {
+            font-size: 1.125rem;
+            filter: grayscale(1);
+            transition: transform 0.4s var(--ease);
+            line-height: 1;
+        }
+        .theme-egg:hover .theme-egg-icon { transform: scale(1.2); }
+
+        .theme-egg-label {
+            font-family: var(--font-sans);
+            letter-spacing: 0.02em;
+            opacity: 0;
+            transform: translateX(4px);
+            transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+        }
+        .theme-egg:hover .theme-egg-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        /* ═══════════════════════════════════
+           LAYOUT
+        ═══════════════════════════════════ */
+        .container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: var(--space-xl) var(--space-md) var(--space-lg);
+        }
+
+        .header {
+            margin-bottom: var(--space-lg);
+        }
+
+        .header-name {
+            font-family: var(--font-sans);
+            font-size: 0.9375rem;
+            font-weight: 400;
+            color: var(--color-text);
+            letter-spacing: -0.01em;
+        }
+
+        .header-role {
+            font-family: var(--font-sans);
+            font-size: 0.9375rem;
+            font-weight: 300;
+            color: var(--color-muted);
+        }
+
+        /* ═══════════════════════════════════
+           PAGES
+        ═══════════════════════════════════ */
+        .page { display: none; }
+        .page.active { display: block; }
+
+        .page.active > * {
+            animation: sophisticatedFadeIn 0.8s var(--ease) both;
+            will-change: transform, opacity;
+        }
+        .page.active > :nth-child(1) { animation-delay: 0s; }
+        .page.active > :nth-child(2) { animation-delay: 0.05s; }
+        .page.active > :nth-child(3) { animation-delay: 0.1s; }
+        .page.active > :nth-child(4) { animation-delay: 0.15s; }
+        .page.active > :nth-child(5) { animation-delay: 0.2s; }
+        .page.active > :nth-child(6) { animation-delay: 0.25s; }
+        .page.active > :nth-child(7) { animation-delay: 0.3s; }
+        .page.active > :nth-child(8) { animation-delay: 0.35s; }
+        .page.active > :nth-child(9) { animation-delay: 0.4s; }
+        .page.active > :nth-child(10) { animation-delay: 0.45s; }
+
+        @keyframes sophisticatedFadeIn {
+            0% { opacity: 0; filter: blur(12px); transform: scale(0.98) translateY(8px); }
+            100% { opacity: 1; filter: blur(0); transform: scale(1) translateY(0); }
+        }
+
+        /* ═══════════════════════════════════
+           CONTENT SECTIONS
+        ═══════════════════════════════════ */
+        .content > * {
+            opacity: 0;
+            transform: translateY(12px);
+            transition: opacity 1.4s var(--ease), transform 1.2s var(--ease);
+        }
+
+        .page.active .content > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .page.active .content > :nth-child(1) { transition-delay: 0s; }
+        .page.active .content > :nth-child(2) { transition-delay: 0.1s; }
+        .page.active .content > :nth-child(3) { transition-delay: 0.15s; }
+        .page.active .content > :nth-child(4) { transition-delay: 0.2s; }
+        .page.active .content > :nth-child(5) { transition-delay: 0.25s; }
+        .page.active .content > :nth-child(6) { transition-delay: 0.3s; }
+        .page.active .content > :nth-child(7) { transition-delay: 0.35s; }
+        .page.active .content > :nth-child(8) { transition-delay: 0.4s; }
+        .page.active .content > :nth-child(9) { transition-delay: 0.45s; }
+        .page.active .content > :nth-child(10) { transition-delay: 0.5s; }
+
+        /* Hero word-by-word reveal animation */
+        .page-title .word {
+            display: inline-block;
+            color: var(--color-muted);
+            animation: wordReveal 0.6s var(--ease) forwards;
+        }
+
+        @keyframes wordReveal {
+            0% { color: var(--color-muted); }
+            100% { color: var(--color-text); }
+        }
+
+        /* About page: hover focus on content sections */
+        .about-section, .what-i-do {
+            transition: opacity 0.4s var(--ease);
+        }
+        #about.active .content:has(> .about-section:hover, > .what-i-do:hover) > :not(:hover) {
+            opacity: 0.25;
+        }
+
+        /* CTA section — tighter spacing between one-liner and link */
+        .about-cta-section .body-text {
+            margin-bottom: var(--space-sm);
+        }
+        .about-cta-section {
+            margin-top: var(--space-md);
+        }
+
+        /* ═══════════════════════════════════
+           WHAT I DO — CLICK ACCORDION
+        ═══════════════════════════════════ */
+        .what-i-do {
+            margin: var(--space-lg) 0;
+            transition: opacity 0.4s var(--ease);
+        }
+
+        .accordion-item {
+            border-top: 1px solid var(--color-border);
+        }
+        .accordion-item:last-child { border-bottom: 1px solid var(--color-border); }
+
+        .accordion-headline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-sm) 0;
+            cursor: pointer;
+            font-weight: 400;
+            color: var(--color-text);
+            font-size: 1rem;
+            user-select: none;
+        }
+
+        .accordion-indicator {
+            color: var(--color-muted);
+            font-size: 1.125rem;
+            font-weight: 300;
+            transition: transform 0.3s var(--ease);
+        }
+
+        .accordion-item.open .accordion-indicator {
+            transform: rotate(45deg);
+        }
+
+        .accordion-desc {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s var(--ease), padding-bottom 0.3s var(--ease);
+            padding-bottom: 0;
+        }
+
+        .accordion-item.open .accordion-desc {
+            max-height: 120px;
+            padding-bottom: var(--space-sm);
+        }
+
+        .accordion-desc p {
+            font-size: 0.875rem;
+            color: var(--color-muted);
+            line-height: 1.6;
+        }
+
+        /* Dim siblings within accordion on hover */
+        .what-i-do:hover .accordion-item { opacity: 0.4; transition: opacity 0.3s var(--ease); }
+        .what-i-do .accordion-item:hover { opacity: 1; }
+
+        /* Horizontal rule separator */
+        .about-divider {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: var(--space-md) 0;
+        }
+
+        /* Wave emoji desaturated to match site tone */
+        .wave-emoji {
+            filter: grayscale(1);
+            display: inline-block;
+        }
+
+        /* Pablo Easter egg — subtle inline link */
+        .easter-egg-link {
+            color: var(--color-muted) !important;
+            text-decoration: underline !important;
+            text-decoration-color: var(--color-faint) !important;
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s;
+        }
+        .easter-egg-link:hover {
+            text-decoration-color: var(--color-muted) !important;
+        }
+
+        /* Pablo photo reveal — hidden by default, smooth expand */
+        .pablo-reveal {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.6s var(--ease), margin-top 0.4s var(--ease);
+            margin-top: 0;
+        }
+        .pablo-reveal.visible {
+            max-height: 400px;
+            margin-top: var(--space-sm);
+        }
+        .pablo-reveal img {
+            width: 100%;
+            border-radius: 8px;
+            display: block;
+        }
+        .pablo-reveal .pablo-placeholder {
+            font-size: 0.8125rem;
+            color: var(--color-faint);
+            font-style: italic;
+            padding: var(--space-sm) 0;
+        }
+
+        /* Get in touch CTA — prominent */
+        .cta-primary {
+            font-size: 1.125rem;
+            font-weight: 400;
+            color: var(--color-text);
+            text-decoration: underline;
+            text-decoration-color: var(--color-faint);
+            text-underline-offset: 4px;
+            transition: text-decoration-color 0.2s;
+        }
+        .cta-primary:hover {
+            text-decoration-color: var(--color-text);
+        }
+
+        .body-text {
+            font-size: 0.9375rem;
+            color: var(--color-muted);
+            line-height: 1.75;
+            margin-bottom: var(--space-md);
+        }
+
+        .body-text a {
+            color: var(--color-text);
+            text-decoration: underline;
+            text-decoration-color: var(--color-faint);
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s;
+        }
+        .body-text a:hover { text-decoration-color: var(--color-text); }
+
+        /* ═══════════════════════════════════
+           SECTION LABELS
+        ═══════════════════════════════════ */
+        .section-label {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: var(--space-md);
+        }
+
+        /* ═══════════════════════════════════
+           PAGE TITLES (serif)
+        ═══════════════════════════════════ */
+        .page-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-md);
+        }
+
+        .page-subtitle {
+            font-size: 0.875rem;
+            color: var(--color-muted);
+            margin-bottom: var(--space-lg);
+        }
+
+        .page-subtitle a {
+            color: var(--color-text);
+            text-decoration: underline;
+            text-decoration-color: var(--color-faint);
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s;
+        }
+        .page-subtitle a:hover { text-decoration-color: var(--color-text); }
+
+        /* ═══════════════════════════════════
+           CTA SECTION
+        ═══════════════════════════════════ */
+        .cta {
+            margin-top: var(--space-xl);
+        }
+
+        .cta p {
+            font-size: 0.9375rem;
+            color: var(--color-muted);
+            line-height: 1.7;
+            margin-bottom: var(--space-sm);
+        }
+
+        .cta a {
+            color: var(--color-text);
+            text-decoration: underline;
+            text-decoration-color: var(--color-faint);
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s;
+        }
+        .cta a:hover { text-decoration-color: var(--color-text); }
+
+        /* ═══════════════════════════════════
+           WORK (CV) PAGE
+        ═══════════════════════════════════ */
+        .cv-entry {
+            padding: var(--space-md) 0;
+            border-top: 1px solid var(--color-border);
+        }
+        .cv-entry:last-of-type { border-bottom: 1px solid var(--color-border); }
+
+        .cv-date {
+            font-size: 0.8125rem;
+            color: var(--color-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .cv-role {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .cv-desc {
+            font-size: 0.875rem;
+            color: var(--color-muted);
+            line-height: 1.6;
+            margin-bottom: var(--space-sm);
+        }
+
+        .cv-bullets {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cv-bullets li {
+            font-size: 0.875rem;
+            color: var(--color-muted);
+            line-height: 1.6;
+            padding-left: 1.25rem;
+            position: relative;
+            margin-bottom: 0.25rem;
+        }
+        .cv-bullets li:last-child { margin-bottom: 0; }
+        .cv-bullets li::before {
+            content: '—';
+            position: absolute;
+            left: 0;
+            color: var(--color-faint);
+        }
+
+        /* Consulting nested sub-clients */
+        .cv-sub-clients {
+            margin-top: var(--space-sm);
+            padding-left: 1rem;
+            border-left: 1px solid var(--color-border);
+        }
+
+        .cv-sub-client {
+            margin-bottom: var(--space-sm);
+        }
+        .cv-sub-client:last-child { margin-bottom: 0; }
+
+        .cv-sub-client-header {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            color: var(--color-text);
+            margin-bottom: 0.125rem;
+        }
+
+        .cv-sub-client-date {
+            font-size: 0.75rem;
+            color: var(--color-muted);
+            font-style: italic;
+            margin-bottom: 0.375rem;
+        }
+
+        .cv-section {
+            margin-top: var(--space-lg);
+        }
+
+        /* Skills capability grid */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+        }
+
+        .skill-card {
+            padding: 0;
+        }
+
+        .skill-card-name {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            color: var(--color-text);
+            margin-bottom: 0.25rem;
+        }
+
+        .skill-card-desc {
+            font-size: 0.8125rem;
+            color: var(--color-muted);
+            line-height: 1.5;
+            margin-bottom: 0.25rem;
+        }
+
+        .skill-card-tools {
+            font-size: 0.75rem;
+            color: var(--color-faint);
+            font-style: italic;
+        }
+
+        /* Hover focus: dim siblings when hovering any section */
+        #work.active .content > * {
+            transition: opacity 0.4s var(--ease);
+        }
+
+        #work.active .content:has(> .cv-entry:hover) > :not(.cv-entry:hover),
+        #work.active .content:has(.cv-section:hover) > :not(.cv-section:hover) {
+            opacity: 0.25;
+        }
+
+        /* Projects bridge link */
+        .cv-bridge {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .cv-bridge a {
+            font-size: 0.9375rem;
+            color: var(--color-text);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .cv-bridge a:hover { color: var(--color-muted); }
+
+        /* ═══════════════════════════════════
+           PLAY (PROJECTS) — CASE STUDY SUB-PAGES
+        ═══════════════════════════════════ */
+        .case-study-back {
+            font-size: 0.875rem;
+            color: var(--color-muted);
+            text-decoration: none;
+            display: inline-block;
+            margin-bottom: var(--space-md);
+            transition: color 0.2s;
+        }
+        .case-study-back:hover { color: var(--color-text); }
+
+        .case-study-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: 0.5rem;
+        }
+
+        .case-study-meta {
+            font-size: 0.8125rem;
+            color: var(--color-muted);
+            margin-bottom: var(--space-lg);
+        }
+
+        .case-section-label {
+            font-size: 0.75rem;
+            font-weight: 400;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding-bottom: var(--space-xs);
+            border-bottom: 1px solid var(--color-border);
+            margin-bottom: var(--space-sm);
+            margin-top: var(--space-lg);
+        }
+        .case-section-label:first-of-type { margin-top: 0; }
+
+        .case-text {
+            font-size: 0.9375rem;
+            color: var(--color-muted);
+            line-height: 1.7;
+            margin-bottom: var(--space-sm);
+        }
+
+        .case-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: var(--space-sm);
+        }
+
+        .case-tag {
+            font-size: 0.75rem;
+            color: var(--color-muted);
+            border: 1px solid var(--color-border);
+            border-radius: 100px;
+            padding: 0.25rem 0.75rem;
+        }
+
+        .case-links {
+            margin-top: var(--space-lg);
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .case-links a {
+            font-size: 0.9375rem;
+            color: var(--color-text);
+            text-decoration: underline;
+            text-decoration-color: var(--color-faint);
+            text-underline-offset: 3px;
+            transition: text-decoration-color 0.2s;
+        }
+        .case-links a:hover { text-decoration-color: var(--color-text); }
+
+        /* ═══════════════════════════════════
+           COMING SOON BADGE
+        ═══════════════════════════════════ */
+        .coming-soon-badge {
+            display: inline-block;
+            font-size: 0.6875rem;
+            font-weight: 400;
+            color: var(--color-muted);
+            border: 1px solid var(--color-border);
+            border-radius: 100px;
+            padding: 0.2rem 0.6rem;
+            margin-left: 0.75rem;
+            vertical-align: middle;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        /* ═══════════════════════════════════
+           PROJECT CARDS
+        ═══════════════════════════════════ */
+        .project-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .project-card {
+            padding: var(--space-md);
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            transition: opacity 0.4s var(--ease), border-color 0.3s var(--ease);
+        }
+        .project-card:hover { border-color: var(--color-faint); }
+
+        .project-card-name {
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--color-text);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-card-desc {
+            font-size: 0.875rem;
+            color: var(--color-muted);
+            line-height: 1.6;
+            flex: 1;
+            margin-bottom: 0.75rem;
+        }
+
+        .project-card-tech {
+            font-size: 0.75rem;
+            color: var(--color-faint);
+            font-style: italic;
+        }
+
+        /* Hover focus: dim other cards and page content when hovering one */
+        #projects.active .content > * {
+            transition: opacity 0.4s var(--ease);
+        }
+
+        .project-card {
+            transition: opacity 0.4s var(--ease);
+        }
+
+        .project-grid:has(.project-card:hover) .project-card:not(:hover) {
+            opacity: 0.25;
+        }
+
+        #projects.active .content:has(.project-card:hover) > :not(.project-grid) {
+            opacity: 0.25;
+        }
+
+        /* ═══════════════════════════════════
+           ARTICLE (THOUGHTS PAGE)
+        ═══════════════════════════════════ */
+        .article-preview {
+            margin-top: var(--space-lg);
+            border-top: 1px solid var(--color-border);
+            padding-top: var(--space-md);
+        }
+
+        .article-title {
+            font-family: var(--font-serif);
+            font-size: clamp(1.25rem, 3vw, 1.75rem);
+            font-weight: 400;
+            letter-spacing: -0.02em;
+            margin-bottom: var(--space-md);
+        }
+
+        .article-heading {
+            font-family: var(--font-serif);
+            font-size: 1.125rem;
+            font-weight: 400;
+            color: var(--color-text);
+            margin-top: var(--space-lg);
+            margin-bottom: var(--space-sm);
+        }
+
+        .article-divider {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: var(--space-md) 0;
+        }
+
+        .article-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.8s var(--ease);
+        }
+        .article-body.expanded {
+            max-height: 5000px;
+        }
+
+        .article-read-more {
+            display: inline-block;
+            font-size: 0.9375rem;
+            color: var(--color-text);
+            text-decoration: underline;
+            text-decoration-color: var(--color-faint);
+            text-underline-offset: 3px;
+            cursor: pointer;
+            transition: text-decoration-color 0.2s;
+            margin-top: var(--space-sm);
+        }
+        .article-read-more:hover { text-decoration-color: var(--color-text); }
+        .article-read-more.hidden { display: none; }
+
+        .article-subscribe {
+            margin-top: var(--space-lg);
+            padding-top: var(--space-md);
+            border-top: 1px solid var(--color-border);
+        }
+
+        /* ═══════════════════════════════════
+           RESPONSIVE
+        ═══════════════════════════════════ */
+        @media (max-width: 640px) {
+            .container { padding: 5rem var(--space-sm) var(--space-lg); }
+            .header { margin-bottom: var(--space-md); }
+            .top-nav { top: var(--space-sm); gap: 0; padding: 0.25rem; }
+            .top-nav a { padding: 0.375rem 0.5rem; font-size: 0.8125rem; }
+            .body-text { line-height: 1.8; margin-bottom: 1.5rem; }
+            .what-i-do { margin: var(--space-md) 0; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .project-grid { grid-template-columns: 1fr; }
+
+            /* Simplify page animations — remove blur for mobile performance */
+            .page.active > * {
+                animation-name: mobileFadeIn;
+            }
+
+            /* Simplify content stagger — shorter, no transform */
+            .content > * {
+                transform: none;
+                transition: opacity 0.8s var(--ease);
+            }
+
+            /* Theme toggle — bottom of page content, not sticky */
+            body {
+                display: flex;
+                flex-direction: column;
+                min-height: 100vh;
+            }
+            .container {
+                flex: 1;
+                order: 1;
+            }
+            .theme-egg {
+                position: static;
+                order: 2;
+                align-self: center;
+                margin: 0 0 var(--space-md);
+                opacity: 1;
+                animation: none;
+                transform: none;
+            }
+            .theme-egg-label { display: none; }
+            .theme-egg-icon { font-size: 1.25rem; }
+        }
+
+        @keyframes mobileFadeIn {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes themeEggEntranceMobile {
+            0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        /* Disable hover-dim effects on touch devices */
+        @media (hover: none) {
+            #about.active .content:has(> .about-section:hover, > .what-i-do:hover) > :not(:hover),
+            #work.active .content:has(> .cv-entry:hover) > :not(.cv-entry:hover),
+            #work.active .content:has(.cv-section:hover) > :not(.cv-section:hover),
+            .project-grid:has(.project-card:hover) .project-card:not(:hover),
+            #projects.active .content:has(.project-card:hover) > :not(.project-grid),
+            .what-i-do:hover .accordion-item {
+                opacity: unset;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════ TOP NAV ═══════ -->
+    <nav class="top-nav">
+        <div class="nav-pill"></div>
+        <a href="#about" class="active">About</a>
+        <a href="#work">Work</a>
+        <a href="#thoughts">Thoughts</a>
+        <a href="#projects">Projects</a>
+    </nav>
+
+    <div class="theme-egg" onclick="toggleTheme()" title="Toggle theme">
+        <span class="theme-egg-icon">☀</span>
+        <span class="theme-egg-label">prefer light?</span>
+    </div>
+
+    <div class="container">
+
+        <!-- ═══════ HEADER ═══════ -->
+        <div class="header">
+            <div class="header-name">Sam Middleton Beattie</div>
+            <div class="header-role">Product & Growth</div>
+        </div>
+
+        <!-- ═══════════════════════════════════
+             ABOUT PAGE
+        ═══════════════════════════════════ -->
+        <section id="about" class="page active">
+            <h1 class="page-title">I'm Sam, nice to meet you. <span class="wave-emoji">👋</span></h1>
+
+            <div class="content">
+                <div class="about-section">
+                    <p class="body-text">I started out in marketing, from intern all the way to running the department. But every project moved me closer to product — and more recently, to building things myself.</p>
+                    <p class="body-text">These days that looks like anything from user research and positioning to building AI integrations and shipping working tools. The line between marketing person and product person got blurry a while ago. I've stopped trying to draw it.</p>
+                </div>
+
+                <div class="what-i-do">
+                    <h2 class="section-label">What I Do</h2>
+                    <div class="accordion-item">
+                        <div class="accordion-headline" onclick="toggleAccordion(this)">
+                            <span>Product & Growth</span>
+                            <span class="accordion-indicator">+</span>
+                        </div>
+                        <div class="accordion-desc">
+                            <p>Experimentation, conversion, retention — the kind of growth that comes from understanding the product, not just running campaigns.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-headline" onclick="toggleAccordion(this)">
+                            <span>Research & Positioning</span>
+                            <span class="accordion-indicator">+</span>
+                        </div>
+                        <div class="accordion-desc">
+                            <p>User interviews, market analysis, and turning what you learn into messaging and strategy that actually resonates.</p>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <div class="accordion-headline" onclick="toggleAccordion(this)">
+                            <span>Building with AI</span>
+                            <span class="accordion-indicator">+</span>
+                        </div>
+                        <div class="accordion-desc">
+                            <p>Shipping working tools, automating workflows, and connecting AI to real data.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-section">
+                    <hr class="about-divider">
+                    <p class="body-text">Originally from Wigan, living in Latvia — trying hard and failing often to speak the local language. Here with my wife and our golden retriever <a href="#" class="easter-egg-link" onclick="togglePablo(event)">Pablo</a>.</p>
+                    <div class="pablo-reveal" id="pablo-reveal">
+                        <img src="no%20paps%20pls.jpg" alt="Pablo the golden retriever">
+                    </div>
+                </div>
+
+                <div class="about-section about-cta-section">
+                    <p class="body-text">I work with early-stage and growth-stage tech companies on product, growth, and the space in between.</p>
+                    <a href="mailto:sambt94@icloud.com" class="cta-primary">Get in touch →</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════
+             WORK (CV) PAGE
+        ═══════════════════════════════════ -->
+        <section id="work" class="page">
+            <h1 class="page-title">Experience</h1>
+
+            <div class="content">
+            <div class="cv-entry">
+                <div class="cv-date">Jun 2025 — Jan 2026</div>
+                <div class="cv-role">Product & Growth Lead · Health & Wellness Startup</div>
+                <ul class="cv-bullets">
+                    <li>Designed a personalised in-app activation initiative and proved its impact on user engagement through A/B testing</li>
+                    <li>Built a cascading notification system targeting users by engagement level to improve retention</li>
+                    <li>Led growth for a new product — designed an extensive beta program with user research across 100+ data points</li>
+                    <li>Created launch and lifecycle communications infrastructure, including a modular email design system with 20+ responsive components</li>
+                </ul>
+            </div>
+
+            <div class="cv-entry">
+                <div class="cv-date">Dec 2024 — Jun 2025</div>
+                <div class="cv-role">Co-founder · Pulss</div>
+                <ul class="cv-bullets">
+                    <li>Co-founded a brand analytics startup targeting an underserved gap in local market brand measurement</li>
+                    <li>Secured enterprise clients through founder-led outreach and validation across 100+ companies</li>
+                    <li>Took initial designs through product iteration and user feedback to a live, working product with authentication and client access</li>
+                    <li>Built an AI integration that let us query brand data in natural language, reducing analysis time from days to minutes</li>
+                </ul>
+            </div>
+
+            <div class="cv-entry">
+                <div class="cv-date">Apr 2024 — Jan 2025</div>
+                <div class="cv-role">Product & Growth Consultant · Self-employed</div>
+                <div class="cv-desc">Took on fractional product marketing and growth roles for SaaS companies, focusing on conversion, retention, and positioning.</div>
+                <div class="cv-sub-clients">
+                    <div class="cv-sub-client">
+                        <div class="cv-sub-client-header">Uxcel</div>
+                        <div class="cv-sub-client-date">Apr — Oct 2024</div>
+                        <ul class="cv-bullets">
+                            <li>Improved pro conversion through a redesigned onboarding experience across email and in-app messaging</li>
+                            <li>Led analytics migration from Amplitude to PostHog</li>
+                            <li>Repositioned product and led website copy redesign based on 500+ survey responses</li>
+                        </ul>
+                    </div>
+                    <div class="cv-sub-client">
+                        <div class="cv-sub-client-header">Kitbash 3D</div>
+                        <div class="cv-sub-client-date">Oct 2024 — Jan 2025</div>
+                        <ul class="cv-bullets">
+                            <li>Used Mixpanel analytics and customer cancellation surveys to design a churn prevention and win-back strategy</li>
+                            <li>Reduced monthly churn by 15% and increased reactivation rates by 20%</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cv-entry">
+                <div class="cv-date">Jun 2022 — Jan 2024</div>
+                <div class="cv-role">Growth & Product Marketer · Whimsical</div>
+                <ul class="cv-bullets">
+                    <li>Launched AI product to #3 on Product Hunt, doubling website traffic</li>
+                    <li>Led user research interviews to inform product development direction and positioning</li>
+                    <li>Redesigned and A/B tested workspace invite flows to drive product-led paid member conversion</li>
+                </ul>
+            </div>
+
+            <div class="cv-entry">
+                <div class="cv-date">Jan 2020 — Jun 2022</div>
+                <div class="cv-role">Head of Marketing · Catchbox</div>
+                <ul class="cv-bullets">
+                    <li>Pitched and led the company's pivot towards hybrid learning in higher education — a repositioning that fundamentally shifted the growth strategy and drove 120% revenue growth in 18 months</li>
+                    <li>Built an organic growth engine around the new positioning — a content loop of SEO, case studies, and thought leadership that established Catchbox in the education vertical without paid advertising</li>
+                    <li>Ran the full marketing function across content, website, campaigns, and partner channels — by ISE 2022, competitors had adopted similar positioning</li>
+                </ul>
+            </div>
+
+            <div class="cv-section">
+                <h2 class="section-label">Skills</h2>
+                <div class="skills-grid">
+                    <div class="skill-card">
+                        <div class="skill-card-name">Growth & Experimentation</div>
+                        <div class="skill-card-desc">A/B testing, conversion, retention, product-led growth</div>
+                        <div class="skill-card-tools">PostHog · Amplitude · Mixpanel</div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-card-name">Data & Analytics</div>
+                        <div class="skill-card-desc">SQL, dashboards, data modelling, platform migrations</div>
+                        <div class="skill-card-tools">Metabase · Hex · Segment</div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-card-name">Lifecycle & CRM</div>
+                        <div class="skill-card-desc">Email architecture, onboarding, activation, notifications</div>
+                        <div class="skill-card-tools">Customer.io · Klaviyo</div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-card-name">Product Thinking</div>
+                        <div class="skill-card-desc">User research, messaging, positioning, prototyping</div>
+                        <div class="skill-card-tools">Figma</div>
+                    </div>
+                    <div class="skill-card">
+                        <div class="skill-card-name">Building & Automation</div>
+                        <div class="skill-card-desc">Shipping products and internal tools with code and AI</div>
+                        <div class="skill-card-tools">Supabase · Claude Code · Google Apps Script · HTML/CSS · n8n</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cv-section">
+                <h2 class="section-label">Education</h2>
+                <div class="cv-entry">
+                    <div class="cv-date">2013 — 2017</div>
+                    <div class="cv-role">MA Economics and Politics · University of Edinburgh</div>
+                </div>
+                <div class="cv-entry">
+                    <div class="cv-date">2022 — 2023</div>
+                    <div class="cv-role">Growth Series & Product Marketing Series · Reforge</div>
+                </div>
+            </div>
+
+            <div class="cv-bridge">
+                <a href="#projects" onclick="navigate('projects')">Selected work and case studies →</a>
+            </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════
+             THOUGHTS (WRITING) PAGE
+        ═══════════════════════════════════ -->
+        <section id="thoughts" class="page">
+            <h1 class="page-title">Thoughts</h1>
+            <p class="page-subtitle">Writing about what happens when your job starts changing underneath you — and what you can build when it does. More coming soon.</p>
+
+            <div class="article-preview">
+                <h2 class="article-title">Losing your moat, learning to build and starting with the hardest part</h2>
+
+                <p class="body-text">My first 'proper' job was a fixed term graduate role at a whisky startup. My role was "innovations and communications assistant." It sounded very fancy. What it looked like in practice was working with a developer on his side hustle, out of the co-working space attached to his day job office.</p>
+
+                <p class="body-text">I absolutely loved it though. All things considered, I had a better idea of what I didn't want to do after finishing university than what I actually did want to do. This role was where I got to figure things out. I applied because I found some story-like blog articles on their site, and I wanted to write too.</p>
+
+                <a class="article-read-more" id="article-read-more" onclick="toggleArticle()">Continue reading ↓</a>
+
+                <div class="article-body" id="article-body">
+                    <p class="body-text">Though I did end up writing on the blog, what surprised me was how much of everything else I did, and what I ended up enjoying the most about the job. I got super into Google Analytics, calculating subscriber lifetime value projections, and — honestly — I didn't mind packing the orders when required. It felt real; I was fully involved in the day to day and the big picture stuff. I loved it.</p>
+
+                    <h3 class="article-heading">Early careers and building your moat</h3>
+
+                    <p class="body-text">A lot has changed in the past 7 years. I'm not even sure that intern role would exist. For one thing, at least half of the stuff I was doing day to day, learning as I went, could be done in a few minutes with AI.</p>
+
+                    <p class="body-text">Even for things like writing an article, I remember there being so much "background knowledge" to learn. Subject lines perform best under 50 characters. Our blog had to be written in html, and I learned the hard way that html tags are far less forgiving than university professors when it came to typing errors.</p>
+
+                    <p class="body-text">None of this was glamorous knowledge, but it compounded into a set of things I could do that made me somewhat useful. Over time, like everyone does as they shape a career, I built this into something of a moat, a mix of specific knowledge and skills that I could apply to different roles.</p>
+
+                    <p class="body-text"><em>Today, this type of knowledge is less valuable.</em></p>
+
+                    <p class="body-text">I've seen this firsthand. After wrapping a successful Product Marketing consultancy stint with a client company, I fully expected to work with them again in a couple of months. When they went dark, I reached out to the PM I'd been working with — a former colleague. He told me straight up that as a PM, he was able to handle a lot of the stuff he'd wanted to do with me. He'd filled his marketing knowledge gap with AI as a sparring partner.</p>
+
+                    <p class="body-text">That one stung. Not because he was wrong, but because I could see what he meant. He showed me some examples, conversions he'd had in chats that fleshed out product position and go to market strategy. For sure, there were missing nuances, and I'm not sure what the end product looked like. But I remember feeling like the writing was on the wall, at least for my consultancy work.</p>
+
+                    <p class="body-text">After years of learning by doing, from digital marketing through to product development, I've found myself asking this question more and more. If knowledge is no longer the main currency, what does the future of work look like for me?</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">The first attempt: Using AI to fill knowledge gaps</h3>
+
+                    <p class="body-text">Before this happened, I'd already been working on the gaps in my knowledge. My career had taken me away from more typical marketing towards product, I was working closely with design, development, and data functions. I wanted to continue going deeper in the product direction, and with Sonnet 3.5 + Claude's projects feature, I felt I was better placed than ever to try learning the things I wanted to.</p>
+
+                    <p class="body-text">I set up a learning schedule, worked through some Figma, SQL, and JavaScript courses. I'd paste error messages into Claude at midnight, ask it to explain database joins like I was five, work through concepts that didn't make sense on the first pass.</p>
+
+                    <p class="body-text">I got a lot out of this approach, don't get me wrong. It helped me learn the basics of databases and helped me to finally make sense of Figma autolayout.</p>
+
+                    <p class="body-text">But I was still thinking in the old way. Looking for knowledge, rather than new ways to work.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">The change — building Pulss</h3>
+
+                    <p class="body-text">It was only when I started working on Pulss that things started to change.</p>
+
+                    <p class="body-text">We were building a startup (a brand analytics product) and I had more data than I knew what to do with. We were sketching out charts, trying to fit data to models to the visuals we had shown to customers on demo calls. Then I stumbled across a way to connect AI (again, Claude in this case) directly to our database. It took me ages to set up. But when it worked, I could suddenly ask questions of the data and get answers. Not only that, but I could uncover trends and insights that I hadn't even thought about.</p>
+
+                    <p class="body-text">I still remember this feeling like a big change, like a cheat code I'd stumbled upon by accident. It felt like I'd unlocked skills I didn't have before. In reality, I was about to discover an entirely new way to work.</p>
+
+                    <p class="body-text">This was the start of my mentality changing. For sure, there's a lot of stuff I've done in the past that no longer feels defensible. But the flip side of that is that a lot more is possible. It's easier to do things that felt out of reach before.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">Learning to think differently</h3>
+
+                    <p class="body-text">It would be crude to distill this all down to just 'fuck it and find out'. But honestly, it's not that far off.</p>
+
+                    <p class="body-text">In recent months I've stopped myself from thinking about what I don't know, what I've yet to learn, or even what AI can do better than me. I've leaned into it. Every challenge is something to work through, every knowledge gap something to explore through practice.</p>
+
+                    <p class="body-text">I've built tools and workflows for my personal and professional life that I would have never thought possible before. I've moved fast, broken many, many things, but I'm genuinely proud of the work. And, happily, I can say that I've learned more by doing than ever before. Knowledge may not be as valuable, but it definitely still pays to know enough to go with the flow.</p>
+
+                    <p class="body-text">I'm writing this because most people I talk to are stuck where I was. They're exposed to the daily noise of new models and next big things, but they've never gone beyond asking ChatGPT a couple of questions. For most people, AI is a buzzword. It's confusing, if not outright scary.</p>
+
+                    <p class="body-text">But in my experience, there's a whole exciting side of things to explore. Every day there are new posts about tools like Claude Code doing incredible things — and if you're not already in that world, it's hard to know where to begin. I didn't either. But I figured it out by doing, and I want to show you how.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">Starting with the hard part</h3>
+
+                    <p class="body-text">It's funny — despite starting as a marketer and building stories for plenty of products and brands, this kind of self-promotion has always been hard for me. Part of the reason I'm starting this newsletter is to push myself past it. To show, using my own experience, successes and failures, that anyone can do really cool things.</p>
+
+                    <p class="body-text">This is the first post. Next, I'll dive into the projects — starting with a meal planner I built for me and my wife. If you want to follow along, sign up below.</p>
+
+                    <div class="article-subscribe">
+                        <p class="body-text">More posts coming soon.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ═══════════════════════════════════
+             PROJECTS
+        ═══════════════════════════════════ -->
+        <section id="projects" class="page">
+            <h1 class="page-title">Things I've built.</h1>
+
+            <div class="content">
+            <p class="page-subtitle">A mix of professional tools, personal projects, and experiments in building with AI. Detailed write-ups for each are in the works.</p>
+
+            <div class="project-grid">
+                <div class="project-card">
+                    <div class="project-card-name">Making Data Accessible</div>
+                    <p class="project-card-desc">Connected AI to read-only databases through Model Context Protocol. Ask questions in plain English and get real answers back. Generate visualisations from live data. Build SQL queries for persistent dashboards.</p>
+                    <div class="project-card-tech">Model Context Protocol · SQL · AI</div>
+                </div>
+                <div class="project-card">
+                    <div class="project-card-name">Modular Email Design System</div>
+                    <p class="project-card-desc">Built a code-first email design system with AI. 20+ responsive HTML components that work across every major email client. Solved the problem of email builders being terrible without writing raw HTML from scratch.</p>
+                    <div class="project-card-tech">AI · HTML Email · CSS</div>
+                </div>
+                <div class="project-card">
+                    <div class="project-card-name">Weekly Meal Planner</div>
+                    <p class="project-card-desc">A meal planning system connecting Notion, recipe scraping, and AI. Generates weekly plans, builds shopping lists, and gets used every single week.</p>
+                    <div class="project-card-tech">Notion API · AI · MCP · Python</div>
+                </div>
+                <div class="project-card">
+                    <div class="project-card-name">Automated File Namer</div>
+                    <p class="project-card-desc">A Google Apps Script that monitors nested Drive folders and auto-renames files based on folder structure. Built to solve a real production workflow problem. Runs daily, zero maintenance.</p>
+                    <div class="project-card-tech">Google Apps Script · Drive API</div>
+                </div>
+            </div>
+            </div>
+        </section>
+
+    </div>
+
+    <!-- ═══════ JAVASCRIPT ═══════ -->
+    <script>
+        // ——— Navigation ———
+        function navigate(hash) {
+            if (event) event.preventDefault();
+            window.location.hash = hash;
+        }
+
+        function handleNavigation() {
+            const hash = window.location.hash.slice(1) || 'about';
+            const pages = document.querySelectorAll('.page');
+            const navLinks = document.querySelectorAll('.top-nav a');
+
+            // Determine which top-level section we're in
+            const topLevel = hash.split('/')[0];
+
+            // Hide all pages
+            pages.forEach(p => {
+                p.classList.remove('active');
+                // Reset animations by forcing reflow
+                p.style.animation = 'none';
+                p.offsetHeight;
+                p.style.animation = '';
+            });
+
+            // Show target page
+            const target = document.getElementById(hash);
+            if (target) {
+                target.classList.add('active');
+            } else {
+                // Fallback to top-level
+                const fallback = document.getElementById(topLevel);
+                if (fallback) fallback.classList.add('active');
+            }
+
+            // Update nav active state
+            navLinks.forEach(link => {
+                const linkHash = link.getAttribute('href').slice(1);
+                link.classList.toggle('active', linkHash === topLevel);
+            });
+
+            // Update pill position
+            updateNavPill();
+
+            // Update page title
+            const titles = {
+                'about': 'Sam Middleton Beattie',
+                'work': 'Experience — Sam Middleton Beattie',
+                'thoughts': 'Thoughts — Sam Middleton Beattie',
+                'projects': 'Projects — Sam Middleton Beattie'
+            };
+            document.title = titles[topLevel] || 'Sam Middleton Beattie';
+
+            // Animate hero words on about page
+            if (topLevel === 'about') animateHeroWords();
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // ——— Sliding Pill ———
+        function updateNavPill() {
+            const pill = document.querySelector('.nav-pill');
+            const activeLink = document.querySelector('.top-nav a.active');
+            const nav = document.querySelector('.top-nav');
+
+            if (!activeLink || !nav || !pill) return;
+
+            const linkRect = activeLink.getBoundingClientRect();
+            const navRect = nav.getBoundingClientRect();
+
+            const x = linkRect.left - navRect.left;
+            const y = linkRect.top - navRect.top;
+
+            pill.style.transform = `translate(${x}px, ${y}px)`;
+            pill.style.width = `${linkRect.width}px`;
+            pill.style.height = `${linkRect.height}px`;
+            pill.style.opacity = '1';
+        }
+
+        // ——— Accordion Toggle ———
+        function toggleAccordion(el) {
+            const item = el.closest('.accordion-item');
+            if (item) item.classList.toggle('open');
+        }
+
+        // ——— Hero Word Animation ———
+        function animateHeroWords() {
+            const hero = document.querySelector('#about .page-title');
+            if (!hero || hero.dataset.animated) return;
+
+            const emojiSpan = hero.querySelector('.wave-emoji');
+            const text = hero.textContent.replace('👋', '').trim();
+
+            hero.innerHTML = text.split(/\s+/).map((word, i) => {
+                const delay = 0.3 + (i * 0.08);
+                return `<span class="word" style="animation-delay: ${delay}s">${word}</span>`;
+            }).join(' ');
+
+            if (emojiSpan) {
+                hero.appendChild(document.createTextNode(' '));
+                hero.appendChild(emojiSpan);
+            }
+
+            hero.dataset.animated = 'true';
+        }
+
+        // ——— Pablo Easter Egg ———
+        function togglePablo(e) {
+            if (e) e.preventDefault();
+            const reveal = document.getElementById('pablo-reveal');
+            if (reveal) reveal.classList.toggle('visible');
+        }
+
+        // ——— Article Expand ———
+        function toggleArticle() {
+            const body = document.getElementById('article-body');
+            const link = document.getElementById('article-read-more');
+            if (body) body.classList.add('expanded');
+            if (link) link.classList.add('hidden');
+        }
+
+        // ——— Theme Toggle (Easter egg) ———
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const isLight = document.body.classList.contains('light-mode');
+            const label = document.querySelector('.theme-egg-label');
+            const icon = document.querySelector('.theme-egg-icon');
+            label.textContent = isLight ? 'prefer dark?' : 'prefer light?';
+            icon.textContent = isLight ? '☽' : '☀';
+
+            // Re-calc pill because font rendering may shift sizes
+            setTimeout(updateNavPill, 100);
+        }
+
+        // ——— Init ———
+        window.addEventListener('hashchange', handleNavigation);
+        window.addEventListener('load', () => {
+            handleNavigation();
+            // Initial pill position after fonts load
+            setTimeout(updateNavPill, 100);
+        });
+
+        // Handle link clicks for internal navigation
+        document.addEventListener('click', (e) => {
+            const link = e.target.closest('a[href^="#"]');
+            if (link) {
+                e.preventDefault();
+                const hash = link.getAttribute('href').slice(1);
+                window.location.hash = hash;
+            }
+        });
+    </script>
+
+</body>
+</html>
