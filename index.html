@@ -807,6 +807,53 @@
             border-top: 1px solid var(--color-border);
         }
 
+        .email-form {
+            display: flex;
+            gap: 0.75rem;
+            margin-top: var(--space-sm);
+            max-width: 420px;
+        }
+        .email-form input[type="email"] {
+            flex: 1;
+            padding: 0.625rem 0.875rem;
+            font-family: var(--font-sans);
+            font-size: 0.9375rem;
+            font-weight: 300;
+            color: var(--color-text);
+            background: transparent;
+            border: 1px solid var(--color-border);
+            border-radius: 6px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .email-form input[type="email"]::placeholder {
+            color: var(--color-faint);
+        }
+        .email-form input[type="email"]:focus {
+            border-color: var(--color-muted);
+        }
+        .email-form button {
+            padding: 0.625rem 1.25rem;
+            font-family: var(--font-sans);
+            font-size: 0.9375rem;
+            font-weight: 400;
+            color: var(--color-bg);
+            background: var(--color-text);
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            white-space: nowrap;
+        }
+        .email-form button:hover {
+            opacity: 0.85;
+        }
+        .email-form-message {
+            font-size: 0.875rem;
+            color: var(--color-muted);
+            margin-top: 0.5rem;
+        }
+
         /* ═══════════════════════════════════
            RESPONSIVE
         ═══════════════════════════════════ */
@@ -884,7 +931,7 @@
         <div class="nav-pill"></div>
         <a href="#about" class="active">About</a>
         <a href="#work">Work</a>
-        <a href="#thoughts">Thoughts</a>
+        <a href="#writing">Writing</a>
         <a href="#projects">Projects</a>
     </nav>
 
@@ -1083,10 +1130,10 @@
         </section>
 
         <!-- ═══════════════════════════════════
-             THOUGHTS (WRITING) PAGE
+             WRITING PAGE
         ═══════════════════════════════════ -->
-        <section id="thoughts" class="page">
-            <h1 class="page-title">Thoughts</h1>
+        <section id="writing" class="page">
+            <h1 class="page-title">Writing</h1>
             <p class="page-subtitle">Writing about what happens when your job starts changing underneath you — and what you can build when it does. More coming soon.</p>
 
             <div class="article-preview">
@@ -1096,9 +1143,9 @@
 
                 <p class="body-text">I absolutely loved it though. All things considered, I had a better idea of what I didn't want to do after finishing university than what I actually did want to do. This role was where I got to figure things out. I applied because I found some story-like blog articles on their site, and I wanted to write too.</p>
 
-                <a class="article-read-more" id="article-read-more" onclick="toggleArticle()">Continue reading ↓</a>
+                <a class="article-read-more" id="article-read-more-grounding" onclick="toggleArticle('grounding')">Continue reading ↓</a>
 
-                <div class="article-body" id="article-body">
+                <div class="article-body" id="article-body-grounding">
                     <p class="body-text">Though I did end up writing on the blog, what surprised me was how much of everything else I did, and what I ended up enjoying the most about the job. I got super into Google Analytics, calculating subscriber lifetime value projections, and — honestly — I didn't mind packing the orders when required. It felt real; I was fully involved in the day to day and the big picture stuff. I loved it.</p>
 
                     <h3 class="article-heading">Early careers and building your moat</h3>
@@ -1164,7 +1211,122 @@
                     <p class="body-text">This is the first post. Next, I'll dive into the projects — starting with a meal planner I built for me and my wife. If you want to follow along, sign up below.</p>
 
                     <div class="article-subscribe">
-                        <p class="body-text">More posts coming soon.</p>
+                        <p class="body-text">If you want to follow along, leave your email below. No spam, just new posts when they're ready.</p>
+                        <form class="email-form" onsubmit="handleEmailSubmit(event)">
+                            <input type="email" placeholder="your@email.com" required>
+                            <button type="submit">Subscribe</button>
+                        </form>
+                        <p class="email-form-message" id="email-form-message-grounding"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="article-preview">
+                <h2 class="article-title">My first production code — an automated file renamer for Google Drive</h2>
+
+                <p class="body-text">3 months ago, before the most recent AI releases, I felt like I'd been falling behind a bit. With Pulss, I'd been free to go deep into MCPs and capabilities that had previously been out of reach. But in a full time role, there was understandably much less time for experimenting. So when the chance came, I went all-in on actually building something.</p>
+
+                <a class="article-read-more" id="article-read-more-renamer" onclick="toggleArticle('renamer')">Continue reading ↓</a>
+
+                <div class="article-body" id="article-body-renamer">
+                    <p class="body-text">I figured that, even if I failed, it would be a good learning experience all the same.</p>
+
+                    <h3 class="article-heading">An automated naming system for Google Drive files</h3>
+
+                    <p class="body-text">Like everyone else in late 2025, I was exposed to crazy LinkedIn posts about people vibe-coding entire startups, or building automations on n8n that could automate multi-million dollar business functions in a matter of days.</p>
+
+                    <p class="body-text">Particularly at that moment in time, this felt like all click-bait and very little substance.</p>
+
+                    <p class="body-text">I'd already done some cool stuff with AI. I was a keen MCP user, turning to Claude to interact with databases for analyses that would have taken me weeks or been out of reach entirely. I'd also set up a nice workflow where I could work with Claude on projects and push content to Notion. This saved a lot of time, particularly when creating databases in Notion, which I'd always found to be time consuming and often messy.</p>
+
+                    <p class="body-text">It was the latter that got me involved in this project. I was working alongside a large creative team, who produced lots of images and videos but struggled to maintain a naming structure — particularly because it feeds into other business systems. They wanted a Notion database with charts on top that could measure output and keep file naming in check.</p>
+
+                    <p class="body-text">What seemed like a simple request quickly grew to require an approach that automatically renamed all files within a massive Google Drive folder structure. I stayed onboard — it was a chance to really push what I could do with AI, at a time when I wasn't getting many of those.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">Choosing the tools</h3>
+
+                    <p class="body-text">The first thing I did was drop Notion. I'd built a proof of concept there, with a database and accompanying charts, but with the team working entirely in Google Drive, it made no sense to involve another tool.</p>
+
+                    <p class="body-text">I evaluated n8n, but was wary about using it for production. I'd watched various YouTube tutorials and set up some working automations before, but these always seemed to overpromise and underdeliver. In my personal experience, n8n flows were brittle in a way I couldn't quite put my finger on.</p>
+
+                    <p class="body-text">Apps Script made sense because it was part of Google Workspace. No external tools, no additional access to configure, and it could talk to Drive and Sheets natively. I'd never used Apps Script or any JavaScript beyond a handful of coding challenges, but this was a chance to push myself and Claude to the limit.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">The problem</h3>
+
+                    <p class="body-text">The team was dealing with hundreds of creative files spread across deeply nested Google Drive folders. Files came in with names like <em>final_v3_REAL.psd</em>, <em>banner copy (2).png</em>, or just unnamed exports.</p>
+
+                    <p class="body-text">They were creating a new naming convention, but it was time consuming for designers who were being pushed for faster output. But file names also fed into vital data systems, so having files that didn't follow the proper naming convention could have major consequences downstream.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">Building it with Claude</h3>
+
+                    <p class="body-text">This was my first real project built through conversation with an AI. I didn't write code in the traditional sense — I described what I needed, Claude generated it, I tested it, found where it broke, described the problem, and iterated.</p>
+
+                    <p class="body-text">The core idea was simple: the folder structure already encodes metadata. A file sitting in a deeply nested folder path gets renamed based on each level of the path. The system reads the folder path, extracts each level, and builds the new name. The last part is what the owner adds themselves when they upload the file — a unique identifier for their work. Owners upload to the right folder, add their identifier, and the system does the rest.</p>
+
+                    <h3 class="article-heading" style="font-size: 1rem; margin-top: var(--space-md);">From proof of concept to production tool</h3>
+
+                    <p class="body-text">For the first version, I spun up a mock folder structure in my own Google Drive and played around adding photos of my dog and seeing if they would be renamed. It seemed to work.</p>
+
+                    <p class="body-text">Moving it into production quickly taught me that getting this right would take more iterations — and more back-and-forth with the team — than I'd expected. Each version taught me something, and not always about code.</p>
+
+                    <p class="body-text">The original approach was recursive folder scanning, with the script walking up the tree to find changes. In a massive folder structure, this quickly becomes unviable. Apps Script times out after 6 minutes, and with new files being added every hour, this approach wouldn't work.</p>
+
+                    <p class="body-text">I first tried caching, which improved run times. However, it quickly became clear that caching was vulnerable to human error. Say a designer put a file in the wrong folder — it would get renamed based on the wrong path, and even when moved, it would retain the incorrect name.</p>
+
+                    <p class="body-text">Getting it right required a completely different approach — the Drive Activity API. I'd initially opted against it because it didn't seem like it would be rigorous enough to catch all the uploads. But instead of scanning folders, it asks Google "what files had activity recently?" and only processes those. That solved the core scaling problem.</p>
+
+                    <p class="body-text">It came with its own challenges though. The API would flag all activity, and was limited in how you could control it. The search kept timing out, which I eventually discovered was because it was scanning every file shared with my user — not just the folder my script worked on.</p>
+
+                    <p class="body-text">The solution was to severely limit the scope. I set up triggers to check activity every 15 minutes with a 30 minute lookback window, so each run overlapped with the last. Then I moved the script to a dedicated automation account with very strictly defined access. When the script ran from that account, it could only see the files it was designed to work on.</p>
+
+                    <h3 class="article-heading" style="font-size: 1rem; margin-top: var(--space-md);">Designing for humans</h3>
+
+                    <p class="body-text">Human error and edge cases could never be fully eliminated. That's why I set up error logging and email alerts for the team lead — flagging when the renamer ran into problems, when it timed out, or when designers had uploaded to the wrong folder or without the required inputs.</p>
+
+                    <p class="body-text">The pragmatic answer I landed on for most edge cases: validate inputs, flag clear errors, and rename what you can. A file with a timestamped placeholder name is better than a file with no name at all.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">The result</h3>
+
+                    <p class="body-text">The script ran every 15 minutes on a scheduled trigger. It processes files in 2-5 minutes per run, logs every rename with old name, new name, and folder path, and the team can now find any asset in seconds.</p>
+
+                    <p class="body-text">It's "just" an Apps Script. But it solved a real problem for a real team, and it's been running quietly in the background ever since.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">Coming back to it</h3>
+
+                    <p class="body-text">Months later, I came back to this project to write this case study. Barely three months, but a lot has changed.</p>
+
+                    <p class="body-text">The original was built through chat conversations with Claude. Long back-and-forth threads where I'd describe a problem, get code back, paste it into the Apps Script editor, test it, find issues, and go again. It worked, but it was slow and I was always context-switching between the conversation and the editor.</p>
+
+                    <p class="body-text">Now, not only am I more confident with Claude Code, local files and git, but Claude Code and Opus 4.6 are in a completely different league. I've been able to rebuild this entire project from memory, recreating it in an anonymised demo version with full documentation, a one-click setup, and improvements I wouldn't have known to make the first time around. Code quality checks, security reviews, performance optimisations — all things that were beyond me three months ago.</p>
+
+                    <hr class="article-divider">
+
+                    <h3 class="article-heading">What I learned</h3>
+
+                    <p class="body-text">This project was my first foray into solo building something that other people actually use. For experienced engineers, this might not seem like much. But for me, it changed things — going from a proof of concept I wasn't sure I could build, to a public GitHub repo.</p>
+
+                    <p class="body-text">Claude was doing most of the heavy lifting technically — I won't pretend otherwise. But I'm proud of how I researched, designed the solution, iterated, chose the tools, and just threw myself into it. It was a real "I can do this" moment, but it didn't feel like AI did it all. I didn't feel like my job was being taken, more that I was enabled to solve a genuine problem and apply the best of my skills — the product thinking, the research, the iteration — alongside a capable colleague.</p>
+
+                    <p class="body-text">Building with AI isn't magic. It's a lot of iteration, a lot of "that didn't work, let's try this instead," and learning to ask better questions over time. But it means that I — with no technical background — can build real tools that solve real problems. Whatever happens next, I think that's pretty cool.</p>
+
+                    <p class="body-text" style="margin-top: var(--space-md);"><em><a href="https://github.com/sambt94/creative-file-renamer" target="_blank" style="color: inherit;">Full source code and technical documentation on GitHub →</a></em></p>
+
+                    <div class="article-subscribe">
+                        <p class="body-text">If you want to follow along, leave your email below. No spam, just new posts when they're ready.</p>
+                        <form class="email-form" onsubmit="handleEmailSubmit(event)">
+                            <input type="email" placeholder="your@email.com" required>
+                            <button type="submit">Subscribe</button>
+                        </form>
+                        <p class="email-form-message" id="email-form-message-renamer"></p>
                     </div>
                 </div>
             </div>
@@ -1254,7 +1416,7 @@
             const titles = {
                 'about': 'Sam Middleton Beattie',
                 'work': 'Experience — Sam Middleton Beattie',
-                'thoughts': 'Thoughts — Sam Middleton Beattie',
+                'writing': 'Writing — Sam Middleton Beattie',
                 'projects': 'Projects — Sam Middleton Beattie'
             };
             document.title = titles[topLevel] || 'Sam Middleton Beattie';
@@ -1321,11 +1483,33 @@
         }
 
         // ——— Article Expand ———
-        function toggleArticle() {
-            const body = document.getElementById('article-body');
-            const link = document.getElementById('article-read-more');
+        function toggleArticle(articleId) {
+            // Support legacy calls without an argument (grounding article)
+            const id = articleId || 'grounding';
+            const body = document.getElementById('article-body-' + id);
+            const link = document.getElementById('article-read-more-' + id);
             if (body) body.classList.add('expanded');
             if (link) link.classList.add('hidden');
+        }
+
+        // ——— Email Subscribe ———
+        function handleEmailSubmit(e) {
+            e.preventDefault();
+            const form = e.target;
+            const email = form.querySelector('input[type="email"]').value;
+            const messageEl = form.nextElementSibling;
+
+            // TODO: Wire up to Resend API endpoint
+            // For now, store locally and show confirmation
+            console.log('Email signup:', email);
+
+            if (messageEl) {
+                messageEl.textContent = 'Thanks! I\'ll be in touch when the next post is ready.';
+                messageEl.style.color = 'var(--color-muted)';
+            }
+            form.querySelector('input[type="email"]').value = '';
+            form.querySelector('button').textContent = 'Signed up ✓';
+            form.querySelector('button').disabled = true;
         }
 
         // ——— Theme Toggle (Easter egg) ———
