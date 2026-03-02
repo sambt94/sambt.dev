@@ -49,4 +49,10 @@ describe('ArticlePreview', () => {
     const link = screen.getByText('Test Article Title').closest('a');
     expect(link?.getAttribute('href')).toBe('/writing/test-article');
   });
+
+  it('does not have hover opacity effect', () => {
+    renderWithRouter(<ArticlePreview {...props} />);
+    const link = screen.getByText('Test Article Title').closest('a');
+    expect(link?.classList.contains('hover:opacity-70')).toBe(false);
+  });
 });

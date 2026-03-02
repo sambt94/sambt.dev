@@ -27,10 +27,7 @@ function formatDate(dateStr: string): string {
 
 export function ArticlePreview({ slug, title, type, date, summary }: ArticlePreviewProps) {
   return (
-    <Link
-      to={`/writing/${slug}`}
-      className="block border-t border-border py-md group transition-opacity duration-300 hover:opacity-70 no-underline"
-    >
+    <Link to={`/writing/${slug}`} className="block border-t border-border py-md group no-underline">
       <span className="inline-block text-[0.625rem] font-medium uppercase tracking-widest text-faint mb-xs">
         {typeLabels[type] || type}
       </span>

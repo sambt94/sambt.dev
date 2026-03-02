@@ -26,38 +26,23 @@ export async function action({ request }: ActionFunctionArgs) {
       return json({ error: 'Valid email is required' }, { status: 400 });
     }
 
-    // Create contact in Resend
+    // Create contact in Resend and add to Newsletter segment in one call
     const createRes = await fetch(`${RESEND_API_URL}/contacts`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({
+        email,
+        segments: [NEWSLETTER_SEGMENT_ID],
+      }),
     });
 
     if (!createRes.ok) {
       const err = await createRes.text();
       console.error('Resend create contact failed:', err);
       return json({ error: 'Failed to subscribe' }, { status: 500 });
-    }
-
-    const contact = await createRes.json();
-
-    // Add contact to Newsletter segment
-    const segmentRes = await fetch(`${RESEND_API_URL}/segments/${NEWSLETTER_SEGMENT_ID}/contacts`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ contactId: contact.id }),
-    });
-
-    if (!segmentRes.ok) {
-      const err = await segmentRes.text();
-      console.error('Resend add to segment failed:', err);
-      // Contact was created, just not added to segment — still a partial success
     }
 
     return json({ success: true });
