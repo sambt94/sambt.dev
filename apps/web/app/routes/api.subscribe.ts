@@ -35,7 +35,7 @@ export async function action({ request }: ActionFunctionArgs) {
       },
       body: JSON.stringify({
         email,
-        segments: [NEWSLETTER_SEGMENT_ID],
+        segments: [{ id: NEWSLETTER_SEGMENT_ID }],
       }),
     });
 
