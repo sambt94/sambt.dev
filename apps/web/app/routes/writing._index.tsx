@@ -21,7 +21,7 @@ export default function WritingIndex() {
 
   return (
     <PageContainer>
-      <div className="stagger-children">
+      <div>
         <PageHeader
           title="Writing"
           subtitle="Writing about what happens when your job starts changing underneath you — and what you can build when it does. More coming soon."
