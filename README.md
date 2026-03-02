@@ -1,7 +1,16 @@
-# Pulss Data Analyzer
+# samcodes
 
-An AI-powered tool for extracting actionable insights from brand survey data through natural language queries.
+Personal monorepo for Sam Beattie's projects.
 
-![Work in Progress](https://img.shields.io/badge/status-work%20in%20progress-yellow)
+## Apps
 
-## Testing Husky Hook
+- **[web](apps/web/)** — [sambt.dev](https://sambt.dev) personal site (Remix + Tailwind)
+- **[email](apps/email/)** — React Email templates
+
+## Setup
+
+```bash
+pnpm install
+pnpm --filter web dev    # Start the website at localhost:5173
+pnpm test                # Run tests
+```

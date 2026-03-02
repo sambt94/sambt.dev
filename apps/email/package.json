@@ -1,0 +1,18 @@
+{
+  "name": "@sambt/email",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "email dev --port 3100",
+    "export": "email export --outDir out"
+  },
+  "dependencies": {
+    "@react-email/components": "^1.0.8",
+    "react": "^18.3.1",
+    "react-email": "^5.2.9"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.28",
+    "typescript": "^5.9.3"
+  }
+}
