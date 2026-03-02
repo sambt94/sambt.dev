@@ -1,5 +1,5 @@
 // ABOUTME: Email subscribe form for bottom of articles.
-// ABOUTME: Collects email with placeholder submit handler, styled to match old site's .email-form.
+// ABOUTME: POSTs to /api/subscribe which adds contacts to Resend Newsletter segment.
 
 import { useState } from 'react';
 
@@ -13,11 +13,21 @@ export function EmailSubscribe() {
     setStatus('submitting');
 
     try {
-      // Placeholder — wire to Resend or other provider later
-      await new Promise(resolve => setTimeout(resolve, 500));
-      setStatus('success');
-      setMessage("You're in. I'll let you know when there's something new.");
-      setEmail('');
+      const res = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+
+      if (res.ok) {
+        setStatus('success');
+        setMessage("You're in. I'll let you know when there's something new.");
+        setEmail('');
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setStatus('error');
+        setMessage(data.error || 'Something went wrong. Try again?');
+      }
     } catch {
       setStatus('error');
       setMessage('Something went wrong. Try again?');

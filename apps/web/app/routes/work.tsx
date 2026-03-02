@@ -20,7 +20,7 @@ export default function Work() {
   return (
     <PageContainer>
       <div className="space-y-xl stagger-children">
-        <PageHeader title="Experience" subtitle="The full professional timeline." />
+        <PageHeader title="Experience" />
         {/* Experience */}
         <section>
           <h2 className="text-xs font-normal text-muted uppercase tracking-widest mb-md">

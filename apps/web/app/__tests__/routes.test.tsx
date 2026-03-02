@@ -105,10 +105,11 @@ describe('Route: Writing Index', () => {
     expect(screen.getByText('Losing Your Moat')).toBeDefined();
   });
 
-  it('uses stagger-children for animation', () => {
+  it('does not use stagger-children animation', () => {
     const { container } = renderRoute(<WritingIndex />);
-    const staggerDiv = container.querySelector('.stagger-children');
-    expect(staggerDiv).not.toBeNull();
+    const pageContainer = container.querySelector('.stagger-children');
+    // Writing page should not have stagger animations
+    expect(pageContainer).toBeNull();
   });
 });
 
