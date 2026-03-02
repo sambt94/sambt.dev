@@ -68,6 +68,7 @@ export async function action({ request }: ActionFunctionArgs) {
     }
 
     // Step 3: Send welcome email (only for new subscribers)
+    let emailStatus = 'skipped';
     if (isNewContact) {
       const emailRes = await fetch(`${RESEND_API_URL}/emails`, {
         method: 'POST',
@@ -84,14 +85,20 @@ export async function action({ request }: ActionFunctionArgs) {
         }),
       });
 
-      if (!emailRes.ok) {
+      if (emailRes.ok) {
+        emailStatus = 'sent';
+      } else {
         // Log but don't fail the subscription — contact is already created
         const err = await emailRes.text();
+        emailStatus = `failed: ${emailRes.status} ${err}`;
         console.error('Resend welcome email failed:', err);
       }
     }
 
-    return json({ success: true });
+    return json({
+      success: true,
+      debug: { isNewContact, emailStatus, createStatus: createRes.status },
+    });
   } catch (error) {
     console.error('Subscribe error:', error);
     return json({ error: 'Something went wrong' }, { status: 500 });
