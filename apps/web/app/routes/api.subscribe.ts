@@ -1,5 +1,5 @@
 // ABOUTME: Server-side API route for email subscriptions via Resend.
-// ABOUTME: Accepts POST with email, creates contact in Newsletter segment.
+// ABOUTME: Accepts POST with email, creates contact then adds to Newsletter segment.
 
 import type { ActionFunctionArgs } from '@remix-run/node';
 import { json } from '@remix-run/node';
@@ -26,22 +26,40 @@ export async function action({ request }: ActionFunctionArgs) {
       return json({ error: 'Valid email is required' }, { status: 400 });
     }
 
-    // Create contact in Resend and add to Newsletter segment in one call
+    // Step 1: Create contact in Resend
     const createRes = await fetch(`${RESEND_API_URL}/contacts`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        email,
-        segments: [NEWSLETTER_SEGMENT_ID],
-      }),
+      body: JSON.stringify({ email }),
     });
 
     if (!createRes.ok) {
       const err = await createRes.text();
-      console.error('Resend create contact failed:', err);
+      // 409 means contact already exists — that's fine, continue to add segment
+      if (createRes.status !== 409) {
+        console.error('Resend create contact failed:', err);
+        return json({ error: 'Failed to subscribe' }, { status: 500 });
+      }
+    }
+
+    // Step 2: Add contact to Newsletter segment (by email)
+    const segmentRes = await fetch(
+      `${RESEND_API_URL}/contacts/${encodeURIComponent(email)}/segments/${NEWSLETTER_SEGMENT_ID}`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+
+    if (!segmentRes.ok) {
+      const err = await segmentRes.text();
+      console.error('Resend add to segment failed:', err);
       return json({ error: 'Failed to subscribe' }, { status: 500 });
     }
 
