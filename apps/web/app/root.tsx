@@ -4,6 +4,7 @@
 import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
 import type { LinksFunction } from '@remix-run/node';
 
+import { Analytics } from '@vercel/analytics/remix';
 import { SpeedInsights } from '@vercel/speed-insights/remix';
 import './tailwind.css';
 import { ThemeProvider } from '~/components/theme-provider';
@@ -42,6 +43,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </ThemeProvider>
         <ScrollRestoration />
+        <Analytics />
         <SpeedInsights />
         <Scripts />
       </body>
