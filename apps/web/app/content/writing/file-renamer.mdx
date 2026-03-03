@@ -41,7 +41,7 @@ Apps Script made sense because it was part of Google Workspace. No external tool
 
 The team was dealing with hundreds of creative files spread across deeply nested Google Drive folders. Files came in with names like *final\_v3\_REAL.psd*, *banner copy (2).png*, or just unnamed exports.
 
-They were creating a new naming convention, but it was time consuming for designers who were being pushed for faster output. But file names also fed into vital data systems, so having files that didn't follow the proper naming convention could have major consequences downstream.
+They were creating a new naming convention, but it was time consuming for owners who were being pushed for faster output. But file names also fed into vital data systems, so having files that didn't follow the proper naming convention could have major consequences downstream.
 
 ---
 
@@ -59,7 +59,7 @@ Moving it into production quickly taught me that getting this right would take m
 
 The original approach was recursive folder scanning, with the script walking up the tree to find changes. In a massive folder structure, this quickly becomes unviable. Apps Script times out after 6 minutes, and with new files being added every hour, this approach wouldn't work.
 
-I first tried caching, which improved run times. However, it quickly became clear that caching was vulnerable to human error. Say a designer put a file in the wrong folder — it would get renamed based on the wrong path, and even when moved, it would retain the incorrect name.
+I first tried caching, which improved run times. However, it quickly became clear that caching was vulnerable to human error. Say an owner put a file in the wrong folder — it would get renamed based on the wrong path, and even when moved, it would retain the incorrect name.
 
 Getting it right required a completely different approach — the Drive Activity API. I'd initially opted against it because it didn't seem like it would be rigorous enough to catch all the uploads. But instead of scanning folders, it asks Google "what files had activity recently?" and only processes those. That solved the core scaling problem.
 
@@ -69,7 +69,7 @@ The solution was to severely limit the scope. I set up triggers to check activit
 
 #### Designing for humans
 
-Human error and edge cases could never be fully eliminated. That's why I set up error logging and email alerts for the team lead — flagging when the renamer ran into problems, when it timed out, or when designers had uploaded to the wrong folder or without the required inputs.
+Human error and edge cases could never be fully eliminated. That's why I set up error logging and email alerts for the team lead — flagging when the renamer ran into problems, when it timed out, or when owners had uploaded to the wrong folder or without the required inputs.
 
 The pragmatic answer I landed on for most edge cases: validate inputs, flag clear errors, and rename what you can. A file with a timestamped placeholder name is better than a file with no name at all.
 

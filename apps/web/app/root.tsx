@@ -12,6 +12,7 @@ import { Nav } from '~/components/nav';
 import { SiteHeader } from '~/components/site-header';
 
 export const links: LinksFunction = () => [
+  { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
   { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
   {
     rel: 'preconnect',

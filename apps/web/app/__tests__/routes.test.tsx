@@ -19,7 +19,7 @@ vi.mock('~/lib/articles', () => ({
       status: 'published',
     },
     {
-      slug: 'creative-renamer',
+      slug: 'file-renamer',
       title: 'My first production code',
       type: 'case-study',
       date: '2025-04-30',
@@ -121,29 +121,25 @@ describe('Route: Projects', () => {
 
   it('renders all project cards', () => {
     renderRoute(<ProjectsPage />);
+    expect(screen.getByText('Hand-Drawn to Diagram')).toBeDefined();
     expect(screen.getByText('Making Data Accessible')).toBeDefined();
     expect(screen.getByText('Modular Email Design System')).toBeDefined();
     expect(screen.getByText('Weekly Meal Planner')).toBeDefined();
-    expect(screen.getByText('Automated File Namer')).toBeDefined();
+    expect(screen.getByText('Google Drive File Renamer')).toBeDefined();
   });
 
   it('project cards have border styling', () => {
     renderRoute(<ProjectsPage />);
-    const card = screen.getByText('Making Data Accessible').closest('div');
-    expect(card?.classList.contains('border')).toBe(true);
+    const heading = screen.getByText('Making Data Accessible');
+    const card = heading.closest('.border');
+    expect(card).not.toBeNull();
     expect(card?.classList.contains('border-border')).toBe(true);
     expect(card?.classList.contains('rounded-lg')).toBe(true);
   });
 
-  it('project grid has hover-dim-group', () => {
-    const { container } = renderRoute(<ProjectsPage />);
-    const grid = container.querySelector('.hover-dim-group');
-    expect(grid).not.toBeNull();
-  });
-
-  it('uses stagger-children for animation', () => {
-    const { container } = renderRoute(<ProjectsPage />);
-    const staggerDiv = container.querySelector('.stagger-children');
-    expect(staggerDiv).not.toBeNull();
+  it('shows coming soon labels', () => {
+    renderRoute(<ProjectsPage />);
+    const labels = screen.getAllByText('Coming soon');
+    expect(labels.length).toBeGreaterThan(0);
   });
 });

@@ -1,22 +1,46 @@
 // ABOUTME: Project card component for displaying personal projects.
-// ABOUTME: Bordered cards with hover-dim sibling effect in a grid layout.
+// ABOUTME: Single-column bordered cards with optional "coming soon" label and link.
+
+import { Link } from '@remix-run/react';
 
 interface ProjectCardProps {
   name: string;
   description: string;
   stack: string;
+  href?: string;
+  comingSoon?: boolean;
 }
 
-export function ProjectGrid({ children }: { children: React.ReactNode }) {
-  return <div className="grid grid-cols-1 sm:grid-cols-2 gap-lg hover-dim-group">{children}</div>;
+export function ProjectStack({ children }: { children: React.ReactNode }) {
+  return <div className="flex flex-col gap-sm">{children}</div>;
 }
 
-export function ProjectCard({ name, description, stack }: ProjectCardProps) {
-  return (
-    <div className="flex flex-col p-md border border-border rounded-lg transition-colors duration-300 hover:border-faint">
-      <h3 className="text-copy text-base font-normal mb-xs">{name}</h3>
-      <p className="text-sm text-muted leading-relaxed flex-1 mb-xs">{description}</p>
+export function ProjectCard({ name, description, stack, href, comingSoon }: ProjectCardProps) {
+  const content = (
+    <>
+      <div className="flex items-center justify-between mb-xs">
+        <h3 className="font-serif text-copy text-lg leading-snug">{name}</h3>
+        {comingSoon && (
+          <span className="text-[0.625rem] font-medium uppercase tracking-widest text-faint">
+            Coming soon
+          </span>
+        )}
+      </div>
+      <p className="text-sm text-muted leading-relaxed mb-xs">{description}</p>
       <p className="text-xs text-faint italic">{stack}</p>
-    </div>
+    </>
   );
+
+  const className =
+    'block p-md border border-border rounded-lg no-underline transition-colors duration-300 hover:border-faint';
+
+  if (href) {
+    return (
+      <Link to={href} className={className}>
+        {content}
+      </Link>
+    );
+  }
+
+  return <div className={className}>{content}</div>;
 }
