@@ -13,7 +13,7 @@ interface ArticlePreviewProps {
 
 const typeLabels: Record<string, string> = {
   'case-study': 'Case Study',
-  essay: 'Essay',
+  essay: 'Thoughts',
 };
 
 function formatDate(dateStr: string): string {

@@ -36,7 +36,7 @@ describe('ArticlePreview', () => {
 
   it('renders essay type correctly', () => {
     renderWithRouter(<ArticlePreview {...props} type="essay" />);
-    expect(screen.getByText('Essay')).toBeDefined();
+    expect(screen.getByText('Thoughts')).toBeDefined();
   });
 
   it('formats the date for display', () => {
