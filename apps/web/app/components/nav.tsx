@@ -6,9 +6,9 @@ import { useRef, useEffect, useState, useCallback } from 'react';
 
 const links = [
   { to: '/', label: 'About' },
-  { to: '/work', label: 'Work' },
   { to: '/writing', label: 'Writing' },
   { to: '/projects', label: 'Projects' },
+  { to: '/work', label: 'Work' },
 ];
 
 export function Nav() {
