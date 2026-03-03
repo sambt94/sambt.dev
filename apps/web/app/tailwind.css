@@ -101,18 +101,20 @@
   }
 }
 
-/* Mobile: simplified animations */
+/* Mobile: simplified animations and larger text */
 @media (max-width: 640px) {
   .stagger-children > * {
     filter: none !important;
     transform: none !important;
   }
-}
 
-/* Mobile: theme toggle repositioning */
-@media (max-width: 640px) {
-  .theme-toggle-fixed {
-    top: auto !important;
-    bottom: 1.5rem;
+  body {
+    font-size: 17px;
+  }
+
+  .mdx-content p,
+  .mdx-content li {
+    font-size: 1rem;
   }
 }
+
