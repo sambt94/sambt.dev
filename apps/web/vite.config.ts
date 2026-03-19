@@ -1,8 +1,14 @@
-import { vitePlugin as remix } from "@remix-run/dev";
-import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+// ABOUTME: Vite config for the Remix web app with MDX support.
+// ABOUTME: Integrates @mdx-js/rollup for compiling .mdx content files.
 
-declare module "@remix-run/node" {
+import { vitePlugin as remix } from '@remix-run/dev';
+import { defineConfig } from 'vite';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import mdx from '@mdx-js/rollup';
+import remarkFrontmatter from 'remark-frontmatter';
+import remarkMdxFrontmatter from 'remark-mdx-frontmatter';
+
+declare module '@remix-run/node' {
   interface Future {
     v3_singleFetch: true;
   }
@@ -10,6 +16,9 @@ declare module "@remix-run/node" {
 
 export default defineConfig({
   plugins: [
+    mdx({
+      remarkPlugins: [remarkFrontmatter, remarkMdxFrontmatter],
+    }),
     remix({
       future: {
         v3_fetcherPersist: true,
