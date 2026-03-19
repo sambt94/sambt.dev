@@ -12,9 +12,6 @@ import { RemixServer } from "@remix-run/react";
 import { isbot } from "isbot";
 import { renderToPipeableStream } from "react-dom/server";
 
-// Load and validate environment variables at server startup
-import { env } from "@pulss/core";
-
 const ABORT_DELAY = 5_000;
 
 export default function handleRequest(
@@ -27,14 +24,6 @@ export default function handleRequest(
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   loadContext: AppLoadContext
 ) {
-  // Load environment variables at startup
-  try {
-    const environment = env();
-    console.log("Environment loaded successfully:", 
-      `NODE_ENV: ${environment.NODE_ENV}, PORT: ${environment.PORT}`);
-  } catch (error) {
-    console.error("Failed to load environment variables:", error);
-  }
   return isbot(request.headers.get("user-agent") || "")
     ? handleBotRequest(
         request,
