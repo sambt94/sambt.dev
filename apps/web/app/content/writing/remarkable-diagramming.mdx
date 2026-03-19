@@ -19,6 +19,10 @@ In Part 1, I built a pipeline that turns my handwriting into editable notes. Cla
 
 Diagramming specifically. I'm not an artist. I just like to visualise flows, use mind maps and occasionally sketch a wireframe.
 
+![A hand-drawn diagram on a reMarkable tablet showing the Whimsical plugin skill structure](/images/writing/remarkable-diagram-handdrawn.png)
+
+*Somehow my diagrams are even uglier than my notes.*
+
 Turns out, yes. I built a separate skill for diagrams — same reMarkable pipeline, but instead of transcribing text, Claude reads the drawing and interprets the structure. Boxes, arrows, labels, flow. It could tell me what the diagram was about, draft a mermaid version inline, even recreate it as an interactive drawing. That bit was easy.
 
 But I wanted something I could actually edit and iterate on. And that led me back to a long-running frustration.
@@ -57,6 +61,8 @@ It was far from perfect at first, but I was getting further than I had with Exca
 It's still not perfect. Editing flowcharts and freeform layouts remain tricky — I've recently discovered this is partly because the MCP converts to mermaid under the hood, which introduces its own constraints. But the direction is right. I can create a diagram, work on it with Claude, come back the next day and keep going. That's something none of the other tools could do. And it's Whimsical, which means it *feels right*. When I was part of the marketing team, we tried — and honestly probably failed — to accurately describe this, but something about making things in Whimsical feels more joyful than other tools. That extends to working with Claude and Whimsical together.
 
 I published the skills [on GitHub](https://github.com/sambt94/whimsical-plugin). The team are working fast and some of these might be obsolete within hours of publishing, but you might find them helpful.
+
+![The same diagram, rebuilt in Whimsical with Claude](/images/writing/whimsical-plugin-diagram.png)
 
 <iframe style={{border: 'none'}} width="100%" height="450" src="https://whimsical.com/embed/DGrkPByXgBZNf9jFgYWF2A@6HYTAunKLgTW6fxyc8wk2wHdorQ6m5VUaWLx8GnYQT8d9oQ"></iframe>
 
