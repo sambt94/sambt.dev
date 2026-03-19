@@ -3,6 +3,8 @@
 import { useState, useEffect, lazy, Suspense } from "react";
 import type { MetaFunction } from "@remix-run/node";
 
+export const handle = { hideChrome: true };
+
 export const meta: MetaFunction = () => [
   { title: "Health Dashboard — Sam" },
   { name: "robots", content: "noindex, nofollow" },
@@ -49,7 +51,7 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (pw.toLowerCase().trim() === "lelde2026") {
+    if (pw.toLowerCase().trim() === "samhealth2026") {
       onUnlock();
     } else {
       setError(true);
@@ -202,10 +204,11 @@ function SummaryTab() {
           <h3 className="text-copy text-[0.9375rem] font-normal mb-xs">Questions for Discussion</h3>
           <ul className="list-disc pl-md space-y-xs">
             <li>Overnight lows — compression artifacts or genuine hypoglycaemia?</li>
-            <li>Alcohol + carb synergy — priority concern given healthy HOMA-IR (0.98)?</li>
-            <li>Sensor 2 protocol — continue normal eating or test specific modifications?</li>
-            <li>Recovery from illness — nutritional considerations for rebuilding?</li>
-            <li>Blood work follow-ups — ApoB, CIMT scan, homocysteine retest timeline?</li>
+            <li>Alcohol + carb synergy — how much of a priority given healthy HOMA-IR (0.98)?</li>
+            <li>LDL persistently elevated (3.45–3.82 across 3 tests) with bilateral family history of CVD and mother on statins — next steps?</li>
+            <li>Homocysteine still elevated (18.43) despite methylfolate — B6/B2 trial underway, retest timing?</li>
+            <li>Recovery from food poisoning — nutritional considerations for rebuilding?</li>
+            <li>Overall nutrition programme goals and meal plan direction going forward?</li>
           </ul>
         </section>
       </div>
@@ -240,12 +243,27 @@ function BloodworkTab() {
         <h3 className="text-copy text-[0.9375rem] font-normal">Key Highlights</h3>
         <div className="space-y-xs">
           <p><strong className="text-copy">Metabolic:</strong> Fasting glucose 5.0 mmol/L, insulin 4.5 mU/L, HOMA-IR 0.98 — excellent insulin sensitivity.</p>
-          <p><strong className="text-copy">Lipids:</strong> Total cholesterol 5.18, LDL 3.14 (mildly elevated), HDL 1.60 (good), triglycerides 0.97. ApoB not tested — recommend adding.</p>
+          <p><strong className="text-copy">Lipids:</strong> Total cholesterol 5.18, LDL 3.14 (mildly elevated), HDL 1.60 (good), triglycerides 0.97. ApoB not yet tested.</p>
           <p><strong className="text-copy">Vitamins:</strong> B12 high-normal (636), folate adequate (15.7). Vitamin D borderline-low (56.2 nmol/L) — may warrant supplementation.</p>
           <p><strong className="text-copy">Thyroid:</strong> TSH 1.71, fT4 15.9, fT3 5.6 — all optimal.</p>
           <p><strong className="text-copy">Inflammation:</strong> hsCRP 0.18 — very low, excellent.</p>
           <p><strong className="text-copy">Homocysteine:</strong> 12.5 µmol/L — mildly elevated. B6+B2 supplementation started Feb 25. Retest recommended at 3 months.</p>
         </div>
+      </div>
+
+      <div className="border-t border-border pt-md text-sm text-muted leading-relaxed space-y-sm">
+        <h3 className="text-copy text-[0.9375rem] font-normal">Family Cardiovascular History</h3>
+        <p>
+          Bilateral family history of cardiovascular disease. Mother (first-degree relative) is on
+          statins for atherosclerosis. Paternal grandfather and maternal grandmother both had heart
+          surgery. Maternal grandfather (87) has bradycardia requiring a pacemaker — potentially
+          related to Sam&apos;s constitutional low resting heart rate (avg 44bpm, lowest 36bpm).
+        </p>
+        <p>
+          LDL has been persistently elevated across all three tests (3.45–3.82 mmol/L, Oct 2024 – Feb 2026)
+          with an ApoB/ApoA1 ratio of 0.73 (high-risk bracket). Lipoprotein(a) is normal (&lt;10 mg/dL),
+          ruling out that genetic risk factor.
+        </p>
       </div>
     </div>
   );
