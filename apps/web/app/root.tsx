@@ -1,7 +1,7 @@
 // ABOUTME: Root layout for sambt.dev Remix app.
 // ABOUTME: Loads Inter + Newsreader fonts, wraps app in ThemeProvider, renders shell.
 
-import { Links, Meta, Outlet, Scripts, ScrollRestoration } from '@remix-run/react';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useMatches } from '@remix-run/react';
 import type { LinksFunction } from '@remix-run/node';
 
 import { Analytics } from '@vercel/analytics/remix';
@@ -37,12 +37,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <ThemeProvider>
-          <Nav />
-          <SiteHeader />
           {children}
-          <div className="max-w-content mx-auto px-md pb-lg sm:p-0">
-            <ThemeToggle />
-          </div>
         </ThemeProvider>
         <ScrollRestoration />
         <Analytics />
@@ -54,5 +49,19 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
-  return <Outlet />;
+  const matches = useMatches();
+  const hideChrome = matches.some((m) => (m.handle as any)?.hideChrome);
+
+  return (
+    <>
+      {!hideChrome && <Nav />}
+      {!hideChrome && <SiteHeader />}
+      <Outlet />
+      {!hideChrome && (
+        <div className="max-w-content mx-auto px-md pb-lg sm:p-0">
+          <ThemeToggle />
+        </div>
+      )}
+    </>
+  );
 }
