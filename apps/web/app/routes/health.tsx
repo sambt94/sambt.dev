@@ -178,9 +178,11 @@ function SummaryTab() {
         <section>
           <h3 className="text-copy text-[0.9375rem] font-normal mb-xs">Overnight Lows</h3>
           <p>
-            Multiple overnight readings at 2.2–2.7 mmol/L across the period. Most concerning:
-            2.5 mmol/L on Mar 14. These may be CGM compression artifacts (sleeping on sensor arm)
-            or genuine hypoglycaemia — worth discussing.
+            Several overnight readings dip to 2.2–2.7 mmol/L. However, overall glucose variability
+            is low — the daily standard deviation stays around <strong className="text-copy">1.0–1.4 mmol/L</strong> across
+            the monitoring period, meaning the range is consistent day-to-day rather than erratic.
+            The lows are likely CGM compression artifacts (sleeping on sensor arm) given there are
+            no symptoms, but worth confirming.
           </p>
         </section>
 
@@ -189,10 +191,6 @@ function SummaryTab() {
           <p>
             <strong className="text-copy">Alcohol:</strong> Quit Feb 23. Remained alcohol-free until ski trip
             (Mar 6–14, 2–4 beers/day). Post-trip: back to zero. Clear CGM correlation — beer amplifies spikes.
-          </p>
-          <p className="mt-xs">
-            <strong className="text-copy">Nicotine:</strong> Tabex 25-day course completing on schedule. Switched
-            from snus to nicotine mints, now tapering.
           </p>
           <p className="mt-xs">
             <strong className="text-copy">Supplements:</strong> Methylfolate, fish oil, P5P (B6) 50mg/day,
