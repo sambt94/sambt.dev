@@ -9,13 +9,9 @@ status: "published"
 
 *This started as Part 2 of my [reMarkable → Digital workflow](/writing/remarkable-workflow), but it turned into something else — an exploration of what it's like to work with AI on a canvas, and why I think that matters more than the diagrams themselves.*
 
-**Role:** Solo build · Personal project
-**Timeline:** 2025–2026
-**Stack:** `Excalidraw` · `Whimsical MCP` · `Claude Code` · `Obsidian`
-
 ---
 
-In Part 1, I built a pipeline that turns my handwriting into editable notes. Claude could read my terrible handwriting, and I could refine the output together with it in markdown. Which got me wondering — if this works so well for bad handwriting, what about bad drawings?
+A few weeks ago, I built a pipeline that turns my handwriting into editable notes. Claude could read my terrible handwriting, and I could refine the output together with it in markdown. Which got me wondering — if this works so well for bad handwriting, what about bad drawings?
 
 Diagramming specifically. I'm not an artist. I just like to visualise flows, use mind maps and occasionally sketch a wireframe.
 
@@ -31,7 +27,7 @@ But I wanted something I could actually edit and iterate on. And that led me bac
 
 ### A long-running frustration
 
-AI diagramming is not new. I helped launch one of the first versions three years ago at Whimsical. But while everything else in AI has leapt forward, this hasn't moved.
+AI diagramming is not new. I helped launch [one of the first versions](https://www.linkedin.com/posts/kasparsd_this-week-marks-8-years-since-we-launched-activity-7430637250553499648-swrL) three years ago at Whimsical. But while everything else in AI has leapt forward, this hasn't moved.
 
 I've tried plenty of tools like Miro AI, FigJam and it's always the same loop with the same problem: prompt, get a one-shot diagram, realise it's not quite right, fix it yourself. Critically, you can't go back to AI after the first pass. If you make edits and want AI help again, you're starting from scratch — and you'll probably get a different looking diagram entirely. Even the most recent tools haven't cracked it. [Google Stitch 2.0](https://stitch.withgoogle.com) released to much hype, but after 5 minutes I got frustrated because, here again, you cannot really move elements around or make specific changes collaboratively. You go back to prompting and it just gets messy. For something that's meant to be visual and spatial, it feels surprisingly unintuitive.
 
@@ -65,8 +61,6 @@ It was far from perfect at first, but I was getting further than I had with Exca
 It's still not perfect. Editing flowcharts and freeform layouts remain tricky — I've recently discovered this is partly because the MCP converts to mermaid under the hood, which introduces its own constraints. But the direction is right. I can create a diagram, work on it with Claude, come back the next day and keep going. That's something none of the other tools could do. And it's Whimsical, which means it *feels right*. When I was part of the marketing team, we tried — and honestly probably failed — to accurately describe this, but something about making things in Whimsical feels more joyful than other tools. That extends to working with Claude and Whimsical together.
 
 I published the skills [on GitHub](https://github.com/sambt94/whimsical-plugin). The team are working fast and some of these might be obsolete within hours of publishing, but you might find them helpful.
-
-![The same diagram, rebuilt in Whimsical with Claude](/images/writing/whimsical-plugin-diagram.png)
 
 <iframe style={{border: 'none'}} width="100%" height="450" src="https://whimsical.com/embed/DGrkPByXgBZNf9jFgYWF2A@6HYTAunKLgTW6fxyc8wk2wHdorQ6m5VUaWLx8GnYQT8d9oQ"></iframe>
 
