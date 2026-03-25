@@ -298,7 +298,7 @@
           <ol style="margin-top:1.2rem;">
             <li>
               Open
-              <a href="chrome://extensions" class="link-chrome" target="_blank">chrome://extensions →</a>
+              <code style="background:rgba(255,255,255,.08);padding:3px 8px;border-radius:4px;font-size:.85rem;cursor:pointer;user-select:all" onclick="navigator.clipboard.writeText('chrome://extensions');this.textContent='Copied!';setTimeout(()=>this.textContent='chrome://extensions',1500)">chrome://extensions</code> <span style="font-size:.78rem;color:var(--muted)">(click to copy, paste in address bar)</span>
             </li>
             <li>Enable <strong>Developer mode</strong> (top-right toggle)</li>
             <li>Click <strong>Load unpacked</strong></li>
