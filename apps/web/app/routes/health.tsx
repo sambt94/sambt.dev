@@ -1,7 +1,8 @@
 // ABOUTME: Password-gated health dashboard for Dr Lelde — tabbed layout matching sambt.dev design.
 // ABOUTME: Three tabs: Summary (chart + report), Bloodwork (PDF download), Nutrition (xlsx + recipes).
 import { useState, useEffect, lazy, Suspense } from "react";
-import type { MetaFunction } from "@remix-run/node";
+import { json, type MetaFunction, type ActionFunctionArgs } from "@remix-run/node";
+import { useFetcher } from "@remix-run/react";
 
 export const handle = { hideChrome: true };
 
@@ -9,6 +10,17 @@ export const meta: MetaFunction = () => [
   { title: "Health Dashboard — Sam" },
   { name: "robots", content: "noindex, nofollow" },
 ];
+
+// Server-side password validation — password never sent to the client
+export async function action({ request }: ActionFunctionArgs) {
+  const form = await request.formData();
+  const pw = (form.get("password") as string || "").toLowerCase().trim();
+  const correct = process.env.HEALTH_PASSWORD || "PLACEHOLDER_SET_ENV_VAR";
+  if (pw === correct) {
+    return json({ ok: true });
+  }
+  return json({ ok: false, error: "Incorrect password" }, { status: 401 });
+}
 
 const dailyData = [
   { date: "Feb 23", glucLow: 2.7, glucHigh: 10.1, glucAvg: 5.4, readiness: 83, hrvBal: null, period: "home" },
@@ -46,30 +58,28 @@ type Tab = (typeof tabs)[number];
 // --- Password Gate ---
 
 function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
+  const fetcher = useFetcher<{ ok: boolean; error?: string }>();
   const [pw, setPw] = useState("");
-  const [error, setError] = useState(false);
+  const isSubmitting = fetcher.state !== "idle";
+  const error = fetcher.data && !fetcher.data.ok;
 
-  function handleSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (pw.toLowerCase().trim() === "samhealth2026") {
-      onUnlock();
-    } else {
-      setError(true);
-    }
-  }
+  useEffect(() => {
+    if (fetcher.data?.ok) onUnlock();
+  }, [fetcher.data, onUnlock]);
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <form
-        onSubmit={handleSubmit}
+      <fetcher.Form
+        method="post"
         className="w-full max-w-[320px] mx-md opacity-0 animate-fade-in"
       >
         <h1 className="font-serif font-light text-2xl text-copy mb-xs">Health Dashboard</h1>
         <p className="text-sm text-muted mb-md">Enter the password to view</p>
         <input
           type="password"
+          name="password"
           value={pw}
-          onChange={(e) => { setPw(e.target.value); setError(false); }}
+          onChange={(e) => setPw(e.target.value)}
           placeholder="Password"
           className="w-full bg-transparent border border-border rounded-lg px-3 py-2.5 text-sm text-copy placeholder:text-faint focus:border-muted focus:outline-none transition-colors duration-300"
           autoFocus
@@ -77,11 +87,12 @@ function PasswordGate({ onUnlock }: { onUnlock: () => void }) {
         {error && <p className="mt-xs text-sm text-red-400">Incorrect password</p>}
         <button
           type="submit"
+          disabled={isSubmitting}
           className="mt-sm w-full rounded-lg bg-pill border border-border px-4 py-2.5 text-sm text-copy font-normal hover:bg-border transition-colors duration-300 cursor-pointer"
         >
-          View Dashboard
+          {isSubmitting ? "Checking..." : "View Dashboard"}
         </button>
-      </form>
+      </fetcher.Form>
     </div>
   );
 }
