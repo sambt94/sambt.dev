@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Babushka — Set Up Protection</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #060b18;
+      --dark:   #0a1020;
+      --card:   #0f1729;
+      --border: rgba(255,255,255,0.08);
+      --amber:  #f59e0b;
+      --amber2: #fbbf24;
+      --text:   #e2e8f0;
+      --muted:  #94a3b8;
+      --green:  #10b981;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--navy);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background orbs */
+    .orb {
+      position: fixed; border-radius: 50%;
+      filter: blur(120px); pointer-events: none; z-index: 0;
+    }
+    .orb-1 { width: 500px; height: 500px; background: rgba(245,158,11,.08); top: -100px; right: -100px; }
+    .orb-2 { width: 400px; height: 400px; background: rgba(245,158,11,.05); bottom: -100px; left: -100px; }
+
+    /* Card */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem 3rem;
+      width: 100%;
+      max-width: 560px;
+      position: relative;
+      z-index: 1;
+      box-shadow: 0 40px 100px rgba(0,0,0,.5);
+    }
+
+    /* Top line accent */
+    .card::before {
+      content: '';
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 50%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+      border-radius: 1px;
+    }
+
+    /* Logo */
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 2rem;
+    }
+    .logo-icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      background: var(--amber);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem;
+    }
+    .logo-name { font-size: 1.1rem; font-weight: 800; color: #fff; }
+
+    /* Heading */
+    .heading {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+      font-weight: 900;
+      line-height: 1.15;
+      margin-bottom: .6rem;
+    }
+    .heading .amber { color: var(--amber); }
+    .subheading {
+      font-size: .9rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      line-height: 1.65;
+    }
+
+    /* Progress bar */
+    .progress-wrap {
+      display: flex; gap: 6px; margin-bottom: 2.5rem;
+    }
+    .progress-dot {
+      flex: 1; height: 3px; border-radius: 3px;
+      background: var(--border);
+      transition: background .3s;
+    }
+    .progress-dot.active { background: var(--amber); }
+
+    /* Question block */
+    .question {
+      margin-bottom: 2rem;
+    }
+    .question-label {
+      font-size: .72rem; font-weight: 700;
+      letter-spacing: .15em; text-transform: uppercase;
+      color: var(--amber); margin-bottom: .6rem;
+      display: block;
+    }
+    .question-text {
+      font-size: 1rem; font-weight: 600;
+      color: #fff; margin-bottom: 1rem; line-height: 1.4;
+    }
+
+    /* Option pills */
+    .options {
+      display: flex; flex-wrap: wrap; gap: .55rem;
+    }
+    .option {
+      padding: .55rem 1.1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 100px;
+      font-size: .84rem; font-weight: 500;
+      color: var(--muted);
+      cursor: pointer;
+      transition: all .2s;
+      background: transparent;
+      font-family: inherit;
+    }
+    .option:hover { border-color: rgba(245,158,11,.4); color: var(--amber2); }
+    .option.selected {
+      border-color: var(--amber);
+      background: rgba(245,158,11,.1);
+      color: var(--amber2);
+      font-weight: 600;
+    }
+
+    /* Comfort scale (1–5) */
+    .scale {
+      display: flex; gap: .5rem;
+    }
+    .scale-btn {
+      flex: 1;
+      aspect-ratio: 1;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      font-size: 1rem; font-weight: 700;
+      color: var(--muted);
+      background: transparent;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all .2s;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .scale-btn:hover { border-color: rgba(245,158,11,.4); color: var(--amber2); }
+    .scale-btn.selected {
+      border-color: var(--amber);
+      background: rgba(245,158,11,.1);
+      color: var(--amber2);
+    }
+    .scale-labels {
+      display: flex; justify-content: space-between;
+      margin-top: .5rem; font-size: .7rem; color: var(--muted);
+    }
+
+    /* Text area */
+    textarea {
+      width: 100%;
+      background: rgba(255,255,255,.03);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem 1.1rem;
+      color: var(--text);
+      font-size: .9rem;
+      font-family: inherit;
+      line-height: 1.6;
+      resize: vertical;
+      min-height: 110px;
+      outline: none;
+      transition: border-color .2s;
+    }
+    textarea:focus { border-color: rgba(245,158,11,.4); }
+    textarea::placeholder { color: #3d4f6b; }
+
+    /* Divider */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 2rem 0;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 1rem;
+      background: var(--amber);
+      color: #000;
+      border: none;
+      border-radius: 100px;
+      font-size: 1rem;
+      font-weight: 800;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all .22s;
+      box-shadow: 0 0 32px rgba(245,158,11,.3);
+      letter-spacing: -.01em;
+    }
+    .btn-submit:hover {
+      background: var(--amber2);
+      transform: translateY(-2px);
+      box-shadow: 0 0 48px rgba(245,158,11,.45);
+    }
+    .btn-submit:disabled {
+      opacity: .4; cursor: not-allowed; transform: none;
+    }
+
+    /* Success state */
+    .success {
+      display: none;
+      text-align: center;
+      padding: 1rem 0;
+    }
+    .success-icon { font-size: 3rem; margin-bottom: 1rem; display: block; }
+    .success-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem; font-weight: 900;
+      margin-bottom: .6rem;
+    }
+    .success-desc { color: var(--muted); font-size: .9rem; line-height: 1.7; }
+    .success-note {
+      margin-top: 1.5rem;
+      font-size: .78rem; color: var(--amber);
+      font-weight: 600;
+    }
+
+    .back-link {
+      display: inline-flex; align-items: center; gap: .4rem;
+      font-size: .8rem; color: var(--muted);
+      text-decoration: none; margin-bottom: 1.5rem;
+      transition: color .2s;
+    }
+    .back-link:hover { color: #fff; }
+
+    @media (max-width: 600px) {
+      .card { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+
+  <div class="card">
+
+    <a href="/hackathon-demo/" class="back-link">← Back to Babushka</a>
+
+    <div class="logo">
+      <div class="logo-icon">👵</div>
+      <div class="logo-name">Babushka</div>
+    </div>
+
+    <!-- Progress dots -->
+    <div class="progress-wrap">
+      <div class="progress-dot active" id="dot-1"></div>
+      <div class="progress-dot active" id="dot-2"></div>
+      <div class="progress-dot active" id="dot-3"></div>
+      <div class="progress-dot active" id="dot-4"></div>
+    </div>
+
+    <h1 class="heading">Tell us about <span class="amber">who you're protecting.</span></h1>
+    <p class="subheading">4 quick questions. Guardian uses your answers to set the right level of protection.</p>
+
+    <!-- Form -->
+    <form id="form" novalidate>
+
+      <!-- Q1: Age range -->
+      <div class="question">
+        <span class="question-label">Question 01</span>
+        <div class="question-text">How old is the person you're protecting?</div>
+        <div class="options" id="q1">
+          <button type="button" class="option" data-q="q1" data-v="55–64">55–64</button>
+          <button type="button" class="option" data-q="q1" data-v="65–74">65–74</button>
+          <button type="button" class="option" data-q="q1" data-v="75–84">75–84</button>
+          <button type="button" class="option" data-q="q1" data-v="85+">85+</button>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Q2: Tech comfort 1–5 -->
+      <div class="question">
+        <span class="question-label">Question 02</span>
+        <div class="question-text">How comfortable are they online?</div>
+        <div class="scale" id="q2">
+          <button type="button" class="scale-btn" data-q="q2" data-v="1">1</button>
+          <button type="button" class="scale-btn" data-q="q2" data-v="2">2</button>
+          <button type="button" class="scale-btn" data-q="q2" data-v="3">3</button>
+          <button type="button" class="scale-btn" data-q="q2" data-v="4">4</button>
+          <button type="button" class="scale-btn" data-q="q2" data-v="5">5</button>
+        </div>
+        <div class="scale-labels">
+          <span>Not at all</span>
+          <span>Very confident</span>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Q3: Online shopping -->
+      <div class="question">
+        <span class="question-label">Question 03</span>
+        <div class="question-text">Do they shop online?</div>
+        <div class="options" id="q3">
+          <button type="button" class="option" data-q="q3" data-v="Never">Never</button>
+          <button type="button" class="option" data-q="q3" data-v="Rarely">Rarely</button>
+          <button type="button" class="option" data-q="q3" data-v="Often">Often</button>
+        </div>
+      </div>
+
+      <hr class="divider" />
+
+      <!-- Q4: Scam type (free text) -->
+      <div class="question">
+        <span class="question-label">Question 04</span>
+        <div class="question-text">What kind of scam might they fall for?</div>
+        <textarea
+          id="q4"
+          placeholder="e.g. fake delivery texts, subscription traps, prize emails, tech support calls…"
+        ></textarea>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn" disabled>
+        👵 Run Babushka →
+      </button>
+
+    </form>
+
+    <!-- Success — config code -->
+    <div class="success" id="success">
+      <span class="success-icon">👵</span>
+      <div class="success-title">Babushka knows what to do.</div>
+      <p class="success-desc">
+        Copy this code and paste it into the Babushka extension settings.<br>
+        It tells Babushka how to protect your loved one.
+      </p>
+      <div style="margin: 1.5rem 0;">
+        <textarea id="configCode" readonly style="
+          width: 100%; min-height: 100px; max-height: 140px;
+          background: rgba(0,0,0,.3); border: 1.5px solid rgba(245,158,11,.3);
+          border-radius: 12px; padding: 1rem; color: #fbbf24;
+          font-family: 'SF Mono', 'Fira Code', monospace; font-size: .75rem;
+          line-height: 1.5; resize: none; cursor: pointer;
+        "></textarea>
+        <button id="copyBtn" style="
+          margin-top: .8rem; width: 100%; padding: .8rem;
+          background: rgba(245,158,11,.15); border: 1.5px solid rgba(245,158,11,.3);
+          border-radius: 100px; color: #fbbf24; font-weight: 700;
+          font-size: .9rem; font-family: inherit; cursor: pointer;
+          transition: all .2s;
+        ">📋 Copy to clipboard</button>
+      </div>
+      <a href="/hackathon-demo/instructions.html" style="
+        display: inline-flex; align-items: center; gap: .4rem;
+        color: var(--muted); font-size: .85rem; text-decoration: none;
+        margin-top: .5rem; transition: color .2s;
+      ">Next: Install the extension →</a>
+    </div>
+
+  </div>
+
+  <script>
+    const answers = { q1: null, q2: null, q3: null, q4: '' };
+
+    document.querySelectorAll('.option, .scale-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const q = btn.dataset.q;
+        document.querySelectorAll(`[data-q="${q}"]`).forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        answers[q] = btn.dataset.v;
+        checkReady();
+      });
+    });
+
+    document.getElementById('q4').addEventListener('input', e => {
+      answers.q4 = e.target.value.trim();
+      checkReady();
+    });
+
+    function checkReady() {
+      const ready = answers.q1 && answers.q2 && answers.q3;
+      document.getElementById('submitBtn').disabled = !ready;
+    }
+
+    function generateConfig(answers) {
+      const comfort = parseInt(answers.q2);
+      const protection = comfort <= 2 ? 'maximum' : comfort <= 3 ? 'high' : 'standard';
+      const spam = comfort <= 2 ? 'aggressive' : 'balanced';
+      const shopping = answers.q3;
+      const paymentScan = shopping === 'Never' ? 'off' : shopping === 'Often' ? 'always' : 'cautious';
+
+      return {
+        v: 1,
+        age: answers.q1,
+        protection: protection,
+        spam: spam,
+        payments: paymentScan,
+        scam_notes: answers.q4 || '',
+        created: new Date().toISOString().split('T')[0]
+      };
+    }
+
+    document.addEventListener('click', async function(e) {
+      if (e.target.id === 'copyBtn') {
+        const code = document.getElementById('configCode');
+        try {
+          await navigator.clipboard.writeText(code.value);
+          e.target.textContent = '\u2705 Copied!';
+          e.target.style.background = 'rgba(16,185,129,.15)';
+          e.target.style.borderColor = 'rgba(16,185,129,.3)';
+          e.target.style.color = '#10b981';
+          setTimeout(() => {
+            e.target.textContent = '\ud83d\udccb Copy to clipboard';
+            e.target.style.background = 'rgba(245,158,11,.15)';
+            e.target.style.borderColor = 'rgba(245,158,11,.3)';
+            e.target.style.color = '#fbbf24';
+          }, 2000);
+        } catch (err) {
+          code.select();
+          document.execCommand('copy');
+          e.target.textContent = '\u2705 Copied!';
+        }
+      }
+    });
+
+    document.getElementById('form').addEventListener('submit', async e => {
+      e.preventDefault();
+      document.getElementById('submitBtn').disabled = true;
+
+      const config = generateConfig(answers);
+      const configCode = 'BABUSHKA:' + btoa(JSON.stringify(config));
+
+      document.getElementById('form').style.display = 'none';
+      document.getElementById('success').style.display = 'block';
+      document.getElementById('configCode').value = configCode;
+    });
+  </script>
+
+</body>
+</html>
