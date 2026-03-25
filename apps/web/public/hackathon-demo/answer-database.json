@@ -1,0 +1,51 @@
+[
+  {
+    "age_range": "75\u201384",
+    "tech_comfort": "3",
+    "shops_online": "Often",
+    "scam_notes": "",
+    "timestamp": "2026-03-25T15:34:09.262386"
+  },
+  {
+    "age_range": "65\u201374",
+    "tech_comfort": "2",
+    "shops_online": "Rarely",
+    "scam_notes": "",
+    "timestamp": "2026-03-25T15:34:22.772015"
+  },
+  {
+    "age_range": "75\u201384",
+    "tech_comfort": "3",
+    "shops_online": "Often",
+    "scam_notes": "",
+    "timestamp": "2026-03-25T15:48:10.239764"
+  },
+  {
+    "age_range": "75\u201384",
+    "tech_comfort": "2",
+    "shops_online": "Rarely",
+    "scam_notes": "",
+    "timestamp": "2026-03-25T15:48:24.820467"
+  },
+  {
+    "age_range": "75\u201384",
+    "tech_comfort": "3",
+    "shops_online": "Rarely",
+    "scam_notes": "",
+    "timestamp": "2026-03-25T15:51:32.689767"
+  },
+  {
+    "age_range": "65\u201374",
+    "tech_comfort": "1",
+    "shops_online": "Rarely",
+    "scam_notes": "hi",
+    "timestamp": "2026-03-25T15:53:15.234715"
+  },
+  {
+    "age_range": "65\u201374",
+    "tech_comfort": "2",
+    "shops_online": "Rarely",
+    "scam_notes": "",
+    "timestamp": "2026-03-25T15:53:53.169543"
+  }
+]

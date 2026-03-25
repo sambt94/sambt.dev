@@ -264,7 +264,7 @@
 
   <div class="card">
 
-    <a href="/hackathon-demo/" class="back-link">← Back to Babushka</a>
+    <a href="index.html" class="back-link">← Back to Babushka</a>
 
     <div class="logo">
       <div class="logo-icon">👵</div>
@@ -280,7 +280,7 @@
     </div>
 
     <h1 class="heading">Tell us about <span class="amber">who you're protecting.</span></h1>
-    <p class="subheading">4 quick questions. Guardian uses your answers to set the right level of protection.</p>
+    <p class="subheading">4 quick questions. Babushka uses your answers to set the right level of protection.</p>
 
     <!-- Form -->
     <form id="form" novalidate>
@@ -347,35 +347,15 @@
 
     </form>
 
-    <!-- Success — config code -->
+    <!-- Success -->
     <div class="success" id="success">
-      <span class="success-icon">👵</span>
-      <div class="success-title">Babushka knows what to do.</div>
+      <span class="success-icon">✅</span>
+      <div class="success-title">Babushka is ready.</div>
       <p class="success-desc">
-        Copy this code and paste it into the Babushka extension settings.<br>
-        It tells Babushka how to protect your loved one.
+        Your answers have been saved and your protection profile has been created.
+        Babushka will now use these rules when scanning emails and checkout pages.
       </p>
-      <div style="margin: 1.5rem 0;">
-        <textarea id="configCode" readonly style="
-          width: 100%; min-height: 100px; max-height: 140px;
-          background: rgba(0,0,0,.3); border: 1.5px solid rgba(245,158,11,.3);
-          border-radius: 12px; padding: 1rem; color: #fbbf24;
-          font-family: 'SF Mono', 'Fira Code', monospace; font-size: .75rem;
-          line-height: 1.5; resize: none; cursor: pointer;
-        "></textarea>
-        <button id="copyBtn" style="
-          margin-top: .8rem; width: 100%; padding: .8rem;
-          background: rgba(245,158,11,.15); border: 1.5px solid rgba(245,158,11,.3);
-          border-radius: 100px; color: #fbbf24; font-weight: 700;
-          font-size: .9rem; font-family: inherit; cursor: pointer;
-          transition: all .2s;
-        ">📋 Copy to clipboard</button>
-      </div>
-      <a href="/hackathon-demo/instructions.html" style="
-        display: inline-flex; align-items: center; gap: .4rem;
-        color: var(--muted); font-size: .85rem; text-decoration: none;
-        margin-top: .5rem; transition: color .2s;
-      ">Next: Install the extension →</a>
+      <p class="success-note">⏳ Taking you to the next step…</p>
     </div>
 
   </div>
@@ -383,6 +363,7 @@
   <script>
     const answers = { q1: null, q2: null, q3: null, q4: '' };
 
+    // Option / scale button selection
     document.querySelectorAll('.option, .scale-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const q = btn.dataset.q;
@@ -393,6 +374,7 @@
       });
     });
 
+    // Textarea
     document.getElementById('q4').addEventListener('input', e => {
       answers.q4 = e.target.value.trim();
       checkReady();
@@ -403,57 +385,32 @@
       document.getElementById('submitBtn').disabled = !ready;
     }
 
-    function generateConfig(answers) {
-      const comfort = parseInt(answers.q2);
-      const protection = comfort <= 2 ? 'maximum' : comfort <= 3 ? 'high' : 'standard';
-      const spam = comfort <= 2 ? 'aggressive' : 'balanced';
-      const shopping = answers.q3;
-      const paymentScan = shopping === 'Never' ? 'off' : shopping === 'Often' ? 'always' : 'cautious';
-
-      return {
-        v: 1,
-        age: answers.q1,
-        protection: protection,
-        spam: spam,
-        payments: paymentScan,
-        scam_notes: answers.q4 || '',
-        created: new Date().toISOString().split('T')[0]
-      };
-    }
-
-    document.addEventListener('click', async function(e) {
-      if (e.target.id === 'copyBtn') {
-        const code = document.getElementById('configCode');
-        try {
-          await navigator.clipboard.writeText(code.value);
-          e.target.textContent = '\u2705 Copied!';
-          e.target.style.background = 'rgba(16,185,129,.15)';
-          e.target.style.borderColor = 'rgba(16,185,129,.3)';
-          e.target.style.color = '#10b981';
-          setTimeout(() => {
-            e.target.textContent = '\ud83d\udccb Copy to clipboard';
-            e.target.style.background = 'rgba(245,158,11,.15)';
-            e.target.style.borderColor = 'rgba(245,158,11,.3)';
-            e.target.style.color = '#fbbf24';
-          }, 2000);
-        } catch (err) {
-          code.select();
-          document.execCommand('copy');
-          e.target.textContent = '\u2705 Copied!';
-        }
-      }
-    });
-
+    // Submit — silently POSTs to local server, no download shown to user
     document.getElementById('form').addEventListener('submit', async e => {
       e.preventDefault();
       document.getElementById('submitBtn').disabled = true;
 
-      const config = generateConfig(answers);
-      const configCode = 'BABUSHKA:' + btoa(JSON.stringify(config));
+      const payload = {
+        age_range:    answers.q1,
+        tech_comfort: answers.q2,
+        shops_online: answers.q3,
+        scam_notes:   answers.q4 || ''
+      };
+
+      try {
+        await fetch('http://localhost:3000/save-response', {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body:    JSON.stringify(payload)
+        });
+      } catch (err) {
+        // Server unreachable — still show success, data not critical to user flow
+        console.warn('Could not save to server:', err);
+      }
 
       document.getElementById('form').style.display = 'none';
       document.getElementById('success').style.display = 'block';
-      document.getElementById('configCode').value = configCode;
+      setTimeout(() => { window.location.href = 'instructions.html'; }, 2500);
     });
   </script>
 
