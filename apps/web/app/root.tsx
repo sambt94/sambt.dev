@@ -6,6 +6,7 @@ import type { LinksFunction } from '@remix-run/node';
 
 import { Analytics } from '@vercel/analytics/remix';
 import { SpeedInsights } from '@vercel/speed-insights/remix';
+import { PHProvider } from './provider';
 import './tailwind.css';
 import { ThemeProvider } from '~/components/theme-provider';
 import { ThemeToggle } from '~/components/theme-toggle';
@@ -36,13 +37,15 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body>
-        <ThemeProvider>
-          {children}
-        </ThemeProvider>
-        <ScrollRestoration />
-        <Analytics />
-        <SpeedInsights />
-        <Scripts />
+        <PHProvider>
+          <ThemeProvider>
+            {children}
+          </ThemeProvider>
+          <ScrollRestoration />
+          <Analytics />
+          <SpeedInsights />
+          <Scripts />
+        </PHProvider>
       </body>
     </html>
   );
