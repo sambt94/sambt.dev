@@ -30,4 +30,7 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  ssr: {
+    noExternal: ["posthog-js", "posthog-js/react"],
+  },
 });
