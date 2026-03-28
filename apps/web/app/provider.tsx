@@ -10,7 +10,8 @@ export function PHProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     posthog.init("phc_iVqBOrGWluXfxNTMM6VQ9o0wTbRzElSRF5kcyRlglEy", {
-      api_host: "https://eu.i.posthog.com",
+      api_host: "/ingest",
+      ui_host: "https://eu.posthog.com",
       defaults: "2026-01-30",
     });
 
