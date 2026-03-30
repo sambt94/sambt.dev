@@ -38,9 +38,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       </head>
       <body>
         <PHProvider>
-          <ThemeProvider>
-            {children}
-          </ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
           <ScrollRestoration />
           <Analytics />
           <SpeedInsights />
@@ -53,7 +51,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
 
 export default function App() {
   const matches = useMatches();
-  const hideChrome = matches.some((m) => (m.handle as any)?.hideChrome);
+  const hideChrome = matches.some(m => (m.handle as Record<string, unknown>)?.hideChrome);
 
   return (
     <>
