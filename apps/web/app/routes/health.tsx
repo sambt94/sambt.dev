@@ -1,6 +1,6 @@
 // ABOUTME: Password-gated health dashboard for Dr Lelde — tabbed layout matching sambt.dev design.
 // ABOUTME: Three tabs: Summary (chart + report), Bloodwork (PDF download), Nutrition (xlsx + recipes).
-import { useState, lazy, Suspense } from 'react';
+import { useState, useEffect, lazy, Suspense } from 'react';
 import type { MetaFunction } from '@remix-run/node';
 
 export const handle = { hideChrome: true };
