@@ -1,0 +1,106 @@
+---
+title: "AI and the Art of Motorcycle Navigation"
+type: "essay"
+date: "2026-04-15"
+summary: "I'd been cornering anyone who'd listen about Claude Code for two months. One person actually listened — my dad. Five days later, he was writing code."
+tags: ["AI", "Claude Code", "case study", "building", "family"]
+status: "published"
+---
+
+I have a fear of talking at length about my interests. We've all met the weird man in the pub, the one you struggle to get away from as he recalls just how close he was to being part of the class of 97, if only injuries hadn't got in the way. Maybe it's a healthy social awareness, or an irrational fear of being boring. An internal commitment never to becoming the pub man.
+
+Either way, I've noticed that sometimes, I will get a bit overexcited when the topic switches to AI. Not because I'm an expert (far from it) but because in the last few months I've done some cool stuff that would not have been possible for me before. And I've had fun doing it. So naturally, there's an eagerness to share.
+
+To anyone outside of the bubble (and it is a bubble), I'm sure it's a mix of boring and confusing. I wouldn't blame them if they have not been listening.
+
+To my surprise though, one person had been listening — my dad. I'd told him about Claude when visiting home in the UK, and one month later he'd thought to try it out on a very specific problem. One thing led to another, and we ended up building a tool that makes it easier for him to build routes for use on motorcycle trips.
+
+Before this, he knew nothing about code or AI, and I knew nothing about the intricacies of motorcycle navigation. This is how we made it work.
+
+---
+
+### Claude, meet my Dad
+
+For context, my dad does not have a programming background. That said, our first computer at home was an iMac and I do remember him spending weekends doing things like setting up a wifi network in our house long before everyone else still had dial up. So, I suppose, he does have that tinkerer mentality. Which is kinda why I thought he might enjoy trying to set up Claude Code and put it to use on his very specific problem.
+
+That problem resides in creating well-plotted routes for motorcycle trips. For long bike tours, the ride is the experience; you're not putting an address into Google Maps or Waze and aiming to get there as quickly as possible. You're going for the route, and that takes planning and effort.
+
+For my dad, planning the route takes place across two different apps: MyRoute App, and Garmin BaseCamp. The latter is for the on-bike GPS and vital for when you're on the road, but painful to use ("fucking horrible", in my dad's words). So he uses MRA for precise planning, placing via points for mandatory stops and shaping points to force the route along specific roads, and then exports the route file (.gpx) and uploads it to the BaseCamp desktop app.
+
+Here's where it gets messy. When you export a route from MRA, the track it generates is definitive. That's the dream route, the one you've spent weeks getting right. That track transfers to BaseCamp perfectly. But BaseCamp draws its own route line on top, and that's what the GPS actually follows when you're on the road. Same waypoints, same maps, but BaseCamp's routing logic might take you a different way. A faster road here, a detour around a closure there. The dream route is still in the file. The GPS just might not follow it. And the only way to catch where they disagree is to zoom into every section of a 400km route, comparing them side by side.
+
+So one day he decided to try out Claude, uploading both BaseCamp and MRA's routes to the chat and asking for a comparison. Within half an hour of using Claude for the first time, he'd generated a 5-page methodology document on GPS variance. Accurate, well-sourced, and detailed enough that even he couldn't find fault with it.
+
+It was a great first pass, but there were flaws in some of the responses. Claude could analyse the files and reason about the problem, but it couldn't actually do anything with them. It had no access to the apps, no way to overlay the routes, no ability to run code. It could think about the problem, but it couldn't touch it. My theory was that we could set up Claude code on my dad's laptop to make something that could take the next step.
+
+---
+
+### Setting up from scratch
+
+I fell into using Claude Code, and, despite several attempts, I've had a hard time explaining to others how to set everything up to make the most of it. You start talking about local files, markdown documents and skills, and it quickly becomes abstract.
+
+With my dad though, here was a very specific problem, one that was worth solving enough to push through the learning curve. We jumped on a video call, struggled through screensharing permissions, enabling Git and installing Python libraries... because we were both interested in seeing if we could do better.
+
+From our lengthy WhatsApp exchange the previous day, I built a package hastily named Route Doctor, including an installation wizard and a project-scoped CLAUDE.md intended to make the setup a bit easier. Once we'd enabled everything we needed to get Claude Code running on his machine, we started to test it out on comparing the routes from the two different platforms.
+
+---
+
+### Believing the hype
+
+After two hours of screensharing, we came away from that first call thinking we'd done a pretty good job with the initial package. We could compare routes on a generated map, create an analysis and merge the GPX files to show the "optimum route". At first glance, it looked like it was doing what we wanted it to.
+
+That evening, however, dad continued to put the tool to the test. It turned out that a lot of what the analysis was telling us, though convincing, was well wide of the mark.
+
+He ran a blind test on a route, and the tool reported 0.0% variance across the total route. Perfect match. 100% compliance. Then he opened BaseCamp and looked at the route with his own eyes. The two routes took different roads through one of the smaller towns. What's more, Claude would see no variance across the total route, but wild swings when comparing segment by segment. We later realised this was because the two platforms generated their own segments. So even on the same route, same total distance, by comparing the segments we were ultimately comparing apples to oranges.
+
+In my dad's words, "no matter what statistical analysis or variance analysis or whatever, it has to come down to the human mark 1 eyeball."
+
+---
+
+### The mark one human eyeball
+
+The tool needed reorienting. In asking Claude to derive the optimum route after comparing the two files, we had over automated. Instead of trying to find the optimum route with Claude and some Python functions, we walked back to focus on the comparison element. Over a 400km route, there may only be 5-6 places that need checking in detail. Rather than have the machine try to fix them, we wanted it to surface them for closer inspection.
+
+We rebuilt the tool around this idea, comparing routes at the coordinate level and generating an interactive version of the map. Click a flagged zone, it zooms straight to the spot.
+
+![Route Doctor comparison map showing the Dubrovnik-Posedarje route with divergence zones flagged](/images/writing/route-doctor-map.jpg)
+
+We ran the same route through version two. This time, Route Doctor flagged the divergence and my dad went to investigate. Turns out the main road through Skrad (the small town on that route) is closed for construction until December 2026. BaseCamp knew and rerouted. The track from MyRoute App didn't. Route Doctor pointed him to the right spot. He figured out why and made the call on what to do.
+
+---
+
+### Is this... vibecoding?
+
+A few days in, I sent my dad version 2.1 with the three-line comparison. He tested it and found a problem: the route lines were drawing as straight lines between waypoints, cutting across terrain rather than following the road. We'd initially thought that we'd need a routing API to handle this, which would add additional complexity as we'd be introducing a third algorithm alongside MRA's and BaseCamp's.
+
+My dad kept digging though. In his own Claude Code session, he figured out that you could trace along the existing track data between waypoints, using the road geometry that was already in the file. No API, no new dependency. The road was in the data all along.
+
+He sent me back a zip with the changes. With Claude Code, he'd added a Python function to map the routes to the nearest road. I tested it out and it worked really well. To me this was amazing; unprompted, my dad had solved the problem by writing his own function with Claude Code. He'd opened his first chat with Claude earlier in the week, and now he was solving very specific problems with his deep domain knowledge.
+
+After I told him I was seriously impressed, my dad asked "Can I call myself an AI hipster coder now then?" I told him this was vibe coding... but I'm not sure that's fair. After all, we weren't building a glamorous, Lovable-esque landing page or app interface which would crumble when put in front of real people. We were making a set of very specific tools for his workflow.
+
+---
+
+### Staying in control
+
+Throughout this whole experience, I found myself reaching for contrived metaphors. I'd described AI to my dad as being like a surgeon who has performed countless surgeries but cannot yet see into this particular patient. You give it context, you give it tools, and then it can do things. Without tools or context, it will rely on its training data, and be more likely to make things up (in a very convincing way). And even with proper context and tools, you still can't believe everything you get back.
+
+During his first chat, my dad had asked Claude whether a particular road in Slovenia (road 32) was iconic. Claude said yes, confidently. Except it wasn't. It couldn't be. My dad had made it up and Claude ran with it. In that case, easy to spot. But later down the line, the pair of us still read the first Route Doctor analysis and took it at face value. The variance numbers looked right, the language was confident, and we both nodded along until a closer look told a very different story.
+
+"I like interacting with AI, it makes you think harder," my dad said. He's not wrong. Working through this with someone who was encountering it all for the first time reminded me how much of what I take for granted is actually hard-won instinct — knowing when to push back on a response, when to ask for sources, when something sounds too neat to be true. You accumulate this stuff without realising, and it's only when you watch someone else navigate it that you see how much of it is learned rather than obvious. And even then, you're still not immune to just going along with what's being confidently suggested to you.
+
+---
+
+### The ride home
+
+I went into this thinking I was going to teach my dad how to use AI. That's not what happened. What happened was that he taught me how motorcycle navigation works, and I gave him a way to do something about the bits that annoyed him. Every time the tool got it wrong, we figured it out together. We hashed out 'product' decisions from a mix of his rich domain expertise and my evolving understanding of how to use AI to build things.
+
+I'd been trying to write about how to set up Claude Code for weeks before this. Drafts of setup guides and explainers, none of which were landing. It turns out you don't teach someone to use a tool by explaining the tool. You find a problem they actually care about, and the rest follows. My dad didn't create his own Python functions because I showed him how. He learned it because he had a routing problem that was worth solving, and this was the way to solve it.
+
+The book that inspired this article's heavy-handed title, Zen and the Art of Motorcycle Maintenance, isn't about motorcycles. It's about a father and son, and the idea that understanding how the machine works, really understanding it, not just using it, is where the value lives. My dad didn't know what Python is. I didn't know why BaseCamp takes a different road through a Croatian village. But we were able to meet in the middle, build a shared understanding, and come out the other side with something neither of us could have built alone.
+
+Route Doctor is on GitHub. My dad summarised it better than I could: "the final QC check before exporting the files and hitting the road." He's already used it to validate several more routes for this summer's trip. We're already talking about what to build next.
+
+---
+
+*Route Doctor is open source at [github.com/sambt94/route-doctor](https://github.com/sambt94/route-doctor).*
